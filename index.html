@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Active DIDs</title>
+  <style>
+    :root{
+      --blue:#0b5cff;
+      --blue2:#0a4fe0;
+      --bg1:#f5f9ff;
+      --bg2:#eef5ff;
+      --text:#0b1b3a;
+      --muted:#5e6b85;
+      --card:#ffffff;
+      --border:#e6eefc;
+      --warnbg:#fff7da;
+      --warnbd:#ffe08a;
+      --shadow: 0 10px 30px rgba(11,92,255,.08);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      backdrop-filter: blur(10px);
+      background: rgba(245,249,255,.85);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+      z-index:10;
+    }
+
+    .header-row{
+      max-width: 980px;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .title h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+
+    .title p{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(11,92,255,.10);
+      color: var(--blue);
+      font-size:12px;
+      font-weight:600;
+      border:1px solid rgba(11,92,255,.15);
+      white-space:nowrap;
+    }
+
+    main{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 18px 40px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    @media (max-width: 700px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin: 0 0 6px;
+      font-weight:600;
+    }
+
+    select, input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+
+    select:focus, input:focus{
+      border-color: rgba(11,92,255,.45);
+      box-shadow: 0 0 0 4px rgba(11,92,255,.10);
+    }
+
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid transparent;
+      font-weight:700;
+      cursor:pointer;
+      font-size:14px;
+      transition:.15s ease;
+      user-select:none;
+    }
+
+    .btn-primary{
+      background: var(--blue);
+      color:#fff;
+    }
+    .btn-primary:hover{ background: var(--blue2); }
+
+    .btn-outline{
+      background:#fff;
+      border-color: rgba(11,92,255,.28);
+      color: var(--blue);
+    }
+    .btn-outline:hover{
+      border-color: rgba(11,92,255,.55);
+      background: rgba(11,92,255,.06);
+    }
+
+    .result{
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      background: #fbfdff;
+    }
+
+    .result-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .result-title{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .result-line{
+      margin-top:8px;
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.3px;
+      line-height:1.4;
+    }
+
+    .hint{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .warn{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--warnbd);
+      background: var(--warnbg);
+      color:#4c3b00;
+      display:none;
+    }
+
+    .warn strong{display:block; margin-bottom:4px}
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .statusline{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div class="title">
+        <h1>Active DIDs</h1>
+        <p>Fast routing by State or Phone • Priority sorted • Copy-ready</p>
+      </div>
+      <div class="pill">Live</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label>Choose Input</label>
+          <select id="inputType">
+            <option value="state">State</option>
+            <option value="phone">Phone</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Choose Status</label>
+          <select id="leadPhoneType">
+            <option value="Clean">Clean</option>
+            <option value="Registered">Registered</option>
+          </select>
+        </div>
+
+        <div id="stateWrap">
+          <label>State</label>
+          <select id="stateValue">
+            <!-- Type-to-jump works automatically -->
+            <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option><option value="AR">AR</option>
+            <option value="CA">CA</option><option value="CO">CO</option><option value="CT">CT</option><option value="DE">DE</option>
+            <option value="DC">DC</option><option value="FL">FL</option><option value="GA">GA</option><option value="HI">HI</option>
+            <option value="ID">ID</option><option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option>
+            <option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option><option value="ME">ME</option>
+            <option value="MD">MD</option><option value="MA">MA</option><option value="MI">MI</option><option value="MN">MN</option>
+            <option value="MS">MS</option><option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option>
+            <option value="NV">NV</option><option value="NH">NH</option><option value="NJ">NJ</option><option value="NM">NM</option>
+            <option value="NY">NY</option><option value="NC">NC</option><option value="ND">ND</option><option value="OH">OH</option>
+            <option value="OK">OK</option><option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option>
+            <option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option><option value="TX">TX</option>
+            <option value="UT">UT</option><option value="VT">VT</option><option value="VA">VA</option><option value="WA">WA</option>
+            <option value="WV">WV</option><option value="WI">WI</option><option value="WY">WY</option>
+          </select>
+          <div class="small">Tip: Click dropdown and type <b>TX</b> or <b>AZ</b> then press Enter.</div>
+        </div>
+
+        <div id="phoneWrap" style="display:none;">
+          <label>Phone (10 digits)</label>
+          <input id="phoneValue" placeholder="8392939105" inputmode="numeric" />
+          <div class="small">Tip: paste number without dashes for fastest match.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btnFind">Find Active DIDs</button>
+        <button class="btn btn-outline" id="btnClear">Clear</button>
+      </div>
+
+      <div class="statusline" id="statusLine">Ready.</div>
+
+      <div class="result" id="resultBox">
+        <div class="result-top">
+          <div class="result-title">Result</div>
+          <button class="btn btn-outline" id="btnCopy" style="padding:10px 12px;">Copy</button>
+        </div>
+        <div class="result-line" id="resultLine">—</div>
+        <div class="hint">Copy format: <b>comma separated</b> (best for VICIdial)</div>
+
+        <div class="warn" id="fallbackWarn">
+          <strong>No match found — use Area Code Dashboard</strong>
+          This phone area code didn’t match any Active DIDs in our routing table.
+          <div style="margin-top:10px;">
+            <a class="btn btn-primary" id="fallbackBtn" target="_blank" rel="noopener noreferrer"
+              style="display:inline-block; text-decoration:none;">
+              Open Phone Search Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+  const SCRIPT_URL = "PASTE_YOUR_SCRIPT_URL_HERE";
+
+  const elInputType = document.getElementById("inputType");
+  const elLeadPhoneType = document.getElementById("leadPhoneType");
+  const elStateWrap = document.getElementById("stateWrap");
+  const elPhoneWrap = document.getElementById("phoneWrap");
+  const elStateValue = document.getElementById("stateValue");
+  const elPhoneValue = document.getElementById("phoneValue");
+  const elBtnFind = document.getElementById("btnFind");
+  const elBtnClear = document.getElementById("btnClear");
+  const elBtnCopy = document.getElementById("btnCopy");
+  const elResultLine = document.getElementById("resultLine");
+  const elStatusLine = document.getElementById("statusLine");
+  const elFallbackWarn = document.getElementById("fallbackWarn");
+  const elFallbackBtn = document.getElementById("fallbackBtn");
+
+  let lastCopyText = "";
+
+  function setLoading(isLoading){
+    elBtnFind.disabled = isLoading;
+    elBtnFind.textContent = isLoading ? "Checking lines…" : "Find Active DIDs";
+  }
+
+  function setStatus(text){
+    elStatusLine.textContent = text;
+  }
+
+  function hideFallback(){
+    elFallbackWarn.style.display = "none";
+    elFallbackBtn.href = "https://skydreamers.com/webform/dashboard.php";
+  }
+
+  function showFallback(url){
+    elFallbackWarn.style.display = "block";
+    elFallbackBtn.href = url || "https://skydreamers.com/webform/dashboard.php";
+  }
+
+  function updateInputMode(){
+    const type = elInputType.value;
+    hideFallback();
+    elResultLine.textContent = "—";
+    lastCopyText = "";
+    if(type === "state"){
+      elStateWrap.style.display = "block";
+      elPhoneWrap.style.display = "none";
+    } else {
+      elStateWrap.style.display = "none";
+      elPhoneWrap.style.display = "block";
+      elPhoneValue.focus();
+    }
+  }
+
+  elInputType.addEventListener("change", updateInputMode);
+
+  elBtnClear.addEventListener("click", () => {
+    elLeadPhoneType.value = "Clean";
+    elStateValue.value = "TX";
+    elPhoneValue.value = "";
+    hideFallback();
+    elResultLine.textContent = "—";
+    lastCopyText = "";
+    setStatus("Cleared.");
+  });
+
+  async function findDids(){
+    hideFallback();
+    const inputType = elInputType.value;
+    const leadPhoneType = elLeadPhoneType.value;
+
+    let inputValue = "";
+    if(inputType === "state"){
+      inputValue = elStateValue.value;
+    } else {
+      inputValue = elPhoneValue.value.trim();
+    }
+
+    if(!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR_SCRIPT_URL_HERE")){
+      alert("Please paste your Apps Script Web App URL into SCRIPT_URL in index.html");
+      return;
+    }
+
+    if(!inputValue){
+      setStatus("Please select a value.");
+      return;
+    }
+
+    setLoading(true);
+    setStatus("Checking…");
+
+    try{
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.set("action","find");
+      url.searchParams.set("inputType", inputType);
+      url.searchParams.set("inputValue", inputValue);
+      url.searchParams.set("leadPhoneType", leadPhoneType);
+
+      const res = await fetch(url.toString());
+      const data = await res.json();
+
+      if(data.success){
+        elResultLine.textContent = data.resultArrow || "—";
+        lastCopyText = data.resultCsv || "";
+        setStatus(data.message || "Done ✅");
+      } else {
+        elResultLine.textContent = "—";
+        lastCopyText = "";
+        setStatus(data.message || "No match");
+
+        // fallback button only if backend sends fallbackUrl
+        if(data.fallbackUrl){
+          showFallback(data.fallbackUrl);
+        }
+      }
+
+    }catch(err){
+      setStatus("Error: Could not connect to backend.");
+      console.error(err);
+    }finally{
+      setLoading(false);
+    }
+  }
+
+  elBtnFind.addEventListener("click", findDids);
+
+  // Enter key = Find
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Enter"){
+      findDids();
+    }
+  });
+
+  elBtnCopy.addEventListener("click", async () => {
+    if(!lastCopyText){
+      setStatus("Nothing to copy.");
+      return;
+    }
+    try{
+      await navigator.clipboard.writeText(lastCopyText);
+      setStatus("Copied ✅");
+    }catch(e){
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = lastCopyText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setStatus("Copied ✅");
+    }
+  });
+
+  // init
+  elStateValue.value = "TX";
+  updateInputMode();
+</script>
+
+</body>
+</html>
