@@ -3,887 +3,477 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Active DIDs Portal</title>
+  <title>Active DIDs</title>
   <style>
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --primary-light: #dbeafe;
-      --surface: #ffffff;
-      --background: #f8fafc;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --border-focus: #93c5fd;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --error: #ef4444;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    :root{
+      --blue:#0b5cff;
+      --blue2:#0a4fe0;
+      --bg1:#f5f9ff;
+      --bg2:#eef5ff;
+      --text:#0b1b3a;
+      --muted:#5e6b85;
+      --card:#ffffff;
+      --border:#e6eefc;
+      --warnbg:#fff7da;
+      --warnbd:#ffe08a;
+      --shadow: 0 10px 30px rgba(11,92,255,.08);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      min-height:100vh;
     }
 
-    body {
-      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--background);
-      color: var(--text-primary);
-      line-height: 1.5;
-      min-height: 100vh;
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      padding: 1.5rem 2rem;
-      box-shadow: var(--shadow);
-    }
-
-    .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .header-title h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-      letter-spacing: -0.025em;
-    }
-
-    .header-title p {
-      font-size: 0.875rem;
-      opacity: 0.9;
-      font-weight: 400;
-    }
-
-    .header-badge {
-      background: rgba(255, 255, 255, 0.15);
+    header{
+      position:sticky;
+      top:0;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .header-badge::before {
-      content: '';
-      width: 8px;
-      height: 8px;
-      background: var(--success);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Main Content */
-    .main {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 2rem;
-    }
-
-    /* Card */
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .card-header {
-      padding: 1.5rem 2rem;
+      background: rgba(245,249,255,.85);
       border-bottom: 1px solid var(--border);
-      background: var(--primary-light);
+      padding: 14px 18px;
+      z-index:10;
     }
 
-    .card-header h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
+    .header-row{
+      max-width: 980px;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
 
-    .card-body {
-      padding: 2rem;
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
     }
 
-    /* Form */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+    .title h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.2px;
     }
 
-    .form-group {
-      margin-bottom: 1.5rem;
+    .title p{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
     }
 
-    .form-label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
+    .pill{
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(11,92,255,.10);
+      color: var(--blue);
+      font-size:12px;
+      font-weight:600;
+      border:1px solid rgba(11,92,255,.15);
+      white-space:nowrap;
     }
 
-    .form-label .required {
-      color: var(--error);
+    main{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 18px 40px;
     }
 
-    .form-select, .form-input {
-      width: 100%;
-      padding: 0.875rem 1rem;
-      font-size: 1rem;
-      border: 2px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: white;
-      color: var(--text-primary);
-      transition: var(--transition);
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      background-size: 1rem;
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
     }
 
-    .form-input {
-      background-image: none;
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
     }
 
-    .form-select:focus, .form-input:focus {
-      outline: none;
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    @media (max-width: 700px){
+      .grid{grid-template-columns:1fr}
     }
 
-    .form-hint {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin: 0 0 6px;
+      font-weight:600;
     }
 
-    .form-hint svg {
-      flex-shrink: 0;
+    select, input{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      font-size:14px;
+      outline:none;
+      background:#fff;
     }
 
-    /* Buttons */
-    .button-group {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
+    select:focus, input:focus{
+      border-color: rgba(11,92,255,.45);
+      box-shadow: 0 0 0 4px rgba(11,92,255,.10);
     }
 
-    .button {
-      padding: 0.875rem 1.5rem;
-      font-size: 1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    .button-primary {
-      background: var(--primary);
-      color: white;
+    .btn{
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid transparent;
+      font-weight:700;
+      cursor:pointer;
+      font-size:14px;
+      transition:.15s ease;
+      user-select:none;
     }
 
-    .button-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
+    .btn-primary{
+      background: var(--blue);
+      color:#fff;
+    }
+    .btn-primary:hover{ background: var(--blue2); }
+
+    .btn-outline{
+      background:#fff;
+      border-color: rgba(11,92,255,.28);
+      color: var(--blue);
+    }
+    .btn-outline:hover{
+      border-color: rgba(11,92,255,.55);
+      background: rgba(11,92,255,.06);
     }
 
-    .button-primary:active {
-      transform: translateY(0);
+    .result{
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      background: #fbfdff;
     }
 
-    .button-secondary {
-      background: white;
-      color: var(--text-secondary);
-      border: 2px solid var(--border);
+    .result-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    .button-secondary:hover {
-      border-color: var(--border-focus);
-      color: var(--primary);
+    .result-title{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
     }
 
-    .button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
+    .result-line{
+      margin-top:8px;
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.3px;
+      line-height:1.4;
     }
 
-    /* Status */
-    .status {
-      padding: 1rem;
-      border-radius: var(--radius-sm);
-      margin: 1.5rem 0;
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+    .hint{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--muted);
     }
 
-    .status-ready {
-      background: #f0f9ff;
-      color: var(--primary);
-      border-left: 4px solid var(--primary);
+    .warn{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--warnbd);
+      background: var(--warnbg);
+      color:#4c3b00;
+      display:none;
     }
 
-    .status-loading {
-      background: #fffbeb;
-      color: var(--warning);
-      border-left: 4px solid var(--warning);
+    .warn strong{display:block; margin-bottom:4px}
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
     }
 
-    .status-success {
-      background: #f0fdf4;
-      color: var(--success);
-      border-left: 4px solid var(--success);
-    }
-
-    .status-error {
-      background: #fef2f2;
-      color: var(--error);
-      border-left: 4px solid var(--error);
-    }
-
-    /* Results */
-    .results {
-      margin-top: 2rem;
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .results-header {
-      padding: 1rem 1.5rem;
-      background: #f8fafc;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .results-title {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .results-body {
-      padding: 1.5rem;
-      min-height: 120px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .results-placeholder {
-      color: var(--text-muted);
-      font-size: 1rem;
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .results-content {
-      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-      font-size: 1rem;
-      line-height: 1.6;
-      color: var(--text-primary);
-      word-break: break-all;
-      padding: 1rem;
-      background: #f8fafc;
-      border-radius: var(--radius-sm);
-    }
-
-    .results-footer {
-      padding: 1rem 1.5rem;
-      background: #f8fafc;
-      border-top: 1px solid var(--border);
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-
-    /* Fallback Warning */
-    .warning {
-      margin-top: 1.5rem;
-      padding: 1.5rem;
-      background: #fffbeb;
-      border: 2px solid #fbbf24;
-      border-radius: var(--radius);
-      color: #92400e;
-    }
-
-    .warning-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .warning-title {
-      font-weight: 600;
-    }
-
-    .warning-body {
-      margin-bottom: 1rem;
-    }
-
-    .warning-footer {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    /* Utility */
-    .hidden {
-      display: none !important;
-    }
-
-    .loading {
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .main {
-        padding: 0 1rem;
-        margin: 1rem auto;
-      }
-      
-      .card-body {
-        padding: 1.5rem;
-      }
-      
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .button-group {
-        flex-direction: column;
-      }
-      
-      .button {
-        width: 100%;
-      }
+    .statusline{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
     }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="header-container">
-      <div class="header-title">
+  <header>
+    <div class="header-row">
+      <div class="title">
         <h1>Active DIDs Portal</h1>
-        <p>Fast routing by state or phone number • Priority sorted • Copy-ready format</p>
+        <p>Fast routing by State or Phone • Priority sorted • Copy-ready</p>
       </div>
-      <div class="header-badge">
-        Live • System Operational
-      </div>
+      <div class="pill">Live</div>
     </div>
   </header>
 
-  <main class="main">
+  <main>
     <div class="card">
-      <div class="card-header">
-        <h2>DID Search Configuration</h2>
+      <div class="grid">
+        <div>
+          <label>Choose Input</label>
+          <select id="inputType">
+            <option value="state">State</option>
+            <option value="phone">Phone</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Choose Status</label>
+          <select id="leadPhoneType">
+            <option value="Clean">Clean</option>
+            <option value="Registered">Registered</option>
+          </select>
+        </div>
+
+        <div id="stateWrap">
+          <label>State</label>
+          <select id="stateValue">
+            <!-- Type-to-jump works automatically -->
+            <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option><option value="AR">AR</option>
+            <option value="CA">CA</option><option value="CO">CO</option><option value="CT">CT</option><option value="DE">DE</option>
+            <option value="DC">DC</option><option value="FL">FL</option><option value="GA">GA</option><option value="HI">HI</option>
+            <option value="ID">ID</option><option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option>
+            <option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option><option value="ME">ME</option>
+            <option value="MD">MD</option><option value="MA">MA</option><option value="MI">MI</option><option value="MN">MN</option>
+            <option value="MS">MS</option><option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option>
+            <option value="NV">NV</option><option value="NH">NH</option><option value="NJ">NJ</option><option value="NM">NM</option>
+            <option value="NY">NY</option><option value="NC">NC</option><option value="ND">ND</option><option value="OH">OH</option>
+            <option value="OK">OK</option><option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option>
+            <option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option><option value="TX">TX</option>
+            <option value="UT">UT</option><option value="VT">VT</option><option value="VA">VA</option><option value="WA">WA</option>
+            <option value="WV">WV</option><option value="WI">WI</option><option value="WY">WY</option>
+          </select>
+          <div class="small">Tip: Click dropdown and type <b>TX</b> or <b>AZ</b> then press Enter.</div>
+        </div>
+
+        <div id="phoneWrap" style="display:none;">
+          <label>Phone (10 digits)</label>
+          <input id="phoneValue" placeholder="8392939105" inputmode="numeric" />
+          <div class="small">Tip: paste number without dashes for fastest match.</div>
+        </div>
       </div>
-      
-      <div class="card-body">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">Search Method</label>
-            <select class="form-select" id="inputType">
-              <option value="state">Search by State</option>
-              <option value="phone">Search by Phone Number</option>
-            </select>
-            <div class="form-hint">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="8" cy="8" r="7"/>
-                <text x="8" y="11" text-anchor="middle" font-size="10" font-weight="bold">i</text>
-              </svg>
-              Choose how you want to search for Active DIDs
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label class="form-label">Phone Status</label>
-            <select class="form-select" id="leadPhoneType">
-              <option value="clean">Clean Numbers</option>
-              <option value="registered">Registered Numbers</option>
-            </select>
-            <div class="form-hint">
-              Filter by phone number registration status
-            </div>
-          </div>
-          
-          <div class="form-group" id="stateWrap">
-            <label class="form-label">Select State <span class="required">*</span></label>
-            <select class="form-select" id="stateValue">
-              <option value="">Choose a state...</option>
-              <option value="AL">Alabama (AL)</option>
-              <option value="AK">Alaska (AK)</option>
-              <option value="AZ">Arizona (AZ)</option>
-              <option value="AR">Arkansas (AR)</option>
-              <option value="CA">California (CA)</option>
-              <option value="CO">Colorado (CO)</option>
-              <option value="CT">Connecticut (CT)</option>
-              <option value="DE">Delaware (DE)</option>
-              <option value="DC">District of Columbia (DC)</option>
-              <option value="FL">Florida (FL)</option>
-              <option value="GA">Georgia (GA)</option>
-              <option value="HI">Hawaii (HI)</option>
-              <option value="ID">Idaho (ID)</option>
-              <option value="IL">Illinois (IL)</option>
-              <option value="IN">Indiana (IN)</option>
-              <option value="IA">Iowa (IA)</option>
-              <option value="KS">Kansas (KS)</option>
-              <option value="KY">Kentucky (KY)</option>
-              <option value="LA">Louisiana (LA)</option>
-              <option value="ME">Maine (ME)</option>
-              <option value="MD">Maryland (MD)</option>
-              <option value="MA">Massachusetts (MA)</option>
-              <option value="MI">Michigan (MI)</option>
-              <option value="MN">Minnesota (MN)</option>
-              <option value="MS">Mississippi (MS)</option>
-              <option value="MO">Missouri (MO)</option>
-              <option value="MT">Montana (MT)</option>
-              <option value="NE">Nebraska (NE)</option>
-              <option value="NV">Nevada (NV)</option>
-              <option value="NH">New Hampshire (NH)</option>
-              <option value="NJ">New Jersey (NJ)</option>
-              <option value="NM">New Mexico (NM)</option>
-              <option value="NY">New York (NY)</option>
-              <option value="NC">North Carolina (NC)</option>
-              <option value="ND">North Dakota (ND)</option>
-              <option value="OH">Ohio (OH)</option>
-              <option value="OK">Oklahoma (OK)</option>
-              <option value="OR">Oregon (OR)</option>
-              <option value="PA">Pennsylvania (PA)</option>
-              <option value="RI">Rhode Island (RI)</option>
-              <option value="SC">South Carolina (SC)</option>
-              <option value="SD">South Dakota (SD)</option>
-              <option value="TN">Tennessee (TN)</option>
-              <option value="TX" selected>Texas (TX)</option>
-              <option value="UT">Utah (UT)</option>
-              <option value="VT">Vermont (VT)</option>
-              <option value="VA">Virginia (VA)</option>
-              <option value="WA">Washington (WA)</option>
-              <option value="WV">West Virginia (WV)</option>
-              <option value="WI">Wisconsin (WI)</option>
-              <option value="WY">Wyoming (WY)</option>
-            </select>
-            <div class="form-hint">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M8 2v4M8 10v4M3 8h10"/>
-              </svg>
-              Type to jump: Start typing state code (e.g., TX, AZ) then press Enter
-            </div>
-          </div>
-          
-          <div class="form-group hidden" id="phoneWrap">
-            <label class="form-label">Phone Number <span class="required">*</span></label>
-            <input type="text" class="form-input" id="phoneValue" placeholder="Enter 10-digit number" inputmode="numeric" maxlength="10" />
-            <div class="form-hint">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M15 6l-6 6-3-3"/>
-              </svg>
-              Enter exactly 10 digits without dashes or spaces for fastest matching
-            </div>
-          </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btnFind">Find Active DIDs</button>
+        <button class="btn btn-outline" id="btnClear">Clear</button>
+      </div>
+
+      <div class="statusline" id="statusLine">Ready.</div>
+
+      <div class="result" id="resultBox">
+        <div class="result-top">
+          <div class="result-title">Result</div>
+          <button class="btn btn-outline" id="btnCopy" style="padding:10px 12px;">Copy</button>
         </div>
-        
-        <div class="button-group">
-          <button class="button button-primary" id="btnFind">
-            <svg id="btnFindIcon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4a7 7 0 100 14 7 7 0 000-14zM21 21l-4.35-4.35"/>
-            </svg>
-            Find Active DIDs
-          </button>
-          <button class="button button-secondary" id="btnClear">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6l12 12"/>
-            </svg>
-            Clear Form
-          </button>
-        </div>
-        
-        <div id="statusLine" class="status status-ready">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="10" cy="10" r="9"/>
-            <path d="M14 8l-4 4-2-2"/>
-          </svg>
-          Ready to search. Configure your search criteria above.
-        </div>
-        
-        <div class="results">
-          <div class="results-header">
-            <div class="results-title">Active DIDs Results</div>
-            <button class="button button-secondary" id="btnCopy" style="padding: 0.5rem 1rem;">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="4" y="4" width="12" height="12" rx="2"/>
-                <path d="M8 2H4a2 2 0 00-2 2v4"/>
-              </svg>
-              Copy Results
-            </button>
-          </div>
-          
-          <div class="results-body">
-            <div id="resultLine" class="results-placeholder">
-              Search results will appear here
-            </div>
-          </div>
-          
-          <div class="results-footer">
-            <strong>Format:</strong> Comma-separated values (optimized for VICIdial import)
-          </div>
-        </div>
-        
-        <div id="fallbackWarn" class="warning hidden">
-          <div class="warning-header">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
-            </svg>
-            <div class="warning-title">No Active DIDs Found</div>
-          </div>
-          <div class="warning-body">
-            This phone number's area code didn't match any Active DIDs in our routing table.
-            Try the Area Code Dashboard for alternative search options.
-          </div>
-          <div class="warning-footer">
-            <a class="button button-primary" id="fallbackBtn" target="_blank" rel="noopener noreferrer">
+        <div class="result-line" id="resultLine">—</div>
+        <div class="hint">Copy format: <b>comma separated</b> (best for VICIdial)</div>
+
+        <div class="warn" id="fallbackWarn">
+          <strong>No match found — use Area Code Dashboard</strong>
+          This phone area code didn’t match any Active DIDs in our routing table.
+          <div style="margin-top:10px;">
+            <a class="btn btn-primary" id="fallbackBtn" target="_blank" rel="noopener noreferrer"
+              style="display:inline-block; text-decoration:none;">
               Open Phone Search Dashboard
             </a>
-            <button class="button button-secondary" id="closeWarning">
-              Dismiss Warning
-            </button>
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO6nr_jb74vRpqY39pJs6Ca7ZXnFxF46WoV8GXvTVS2bHWMPy82WsMz0GnsqiPXgf9/exec";
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO6nr_jb74vRpqY39pJs6Ca7ZXnFxF46WoV8GXvTVS2bHWMPy82WsMz0GnsqiPXgf9/exec";
 
-    // DOM Elements
-    const elInputType = document.getElementById("inputType");
-    const elLeadPhoneType = document.getElementById("leadPhoneType");
-    const elStateWrap = document.getElementById("stateWrap");
-    const elPhoneWrap = document.getElementById("phoneWrap");
-    const elStateValue = document.getElementById("stateValue");
-    const elPhoneValue = document.getElementById("phoneValue");
-    const elBtnFind = document.getElementById("btnFind");
-    const elBtnFindIcon = document.getElementById("btnFindIcon");
-    const elBtnClear = document.getElementById("btnClear");
-    const elBtnCopy = document.getElementById("btnCopy");
-    const elResultLine = document.getElementById("resultLine");
-    const elStatusLine = document.getElementById("statusLine");
-    const elFallbackWarn = document.getElementById("fallbackWarn");
-    const elFallbackBtn = document.getElementById("fallbackBtn");
-    const elCloseWarning = document.getElementById("closeWarning");
+  const elInputType = document.getElementById("inputType");
+  const elLeadPhoneType = document.getElementById("leadPhoneType");
+  const elStateWrap = document.getElementById("stateWrap");
+  const elPhoneWrap = document.getElementById("phoneWrap");
+  const elStateValue = document.getElementById("stateValue");
+  const elPhoneValue = document.getElementById("phoneValue");
+  const elBtnFind = document.getElementById("btnFind");
+  const elBtnClear = document.getElementById("btnClear");
+  const elBtnCopy = document.getElementById("btnCopy");
+  const elResultLine = document.getElementById("resultLine");
+  const elStatusLine = document.getElementById("statusLine");
+  const elFallbackWarn = document.getElementById("fallbackWarn");
+  const elFallbackBtn = document.getElementById("fallbackBtn");
 
-    let lastCopyText = "";
+  let lastCopyText = "";
 
-    // Initialize
-    function init() {
-      updateInputMode();
-      setupEventListeners();
-      setStatus("Ready to search. Configure your search criteria above.", "ready");
+  function setLoading(isLoading){
+    elBtnFind.disabled = isLoading;
+    elBtnFind.textContent = isLoading ? "Checking lines…" : "Find Active DIDs";
+  }
+
+  function setStatus(text){
+    elStatusLine.textContent = text;
+  }
+
+  function hideFallback(){
+    elFallbackWarn.style.display = "none";
+    elFallbackBtn.href = "https://skydreammers.com/webform/dashboard.php";
+  }
+
+  function showFallback(url){
+    elFallbackWarn.style.display = "block";
+    elFallbackBtn.href = url || "https://skydreammers.com/webform/dashboard.php";
+  }
+
+  function updateInputMode(){
+    const type = elInputType.value;
+    hideFallback();
+    elResultLine.textContent = "—";
+    lastCopyText = "";
+    if(type === "state"){
+      elStateWrap.style.display = "block";
+      elPhoneWrap.style.display = "none";
+    } else {
+      elStateWrap.style.display = "none";
+      elPhoneWrap.style.display = "block";
+      elPhoneValue.focus();
+    }
+  }
+
+  elInputType.addEventListener("change", updateInputMode);
+
+  elBtnClear.addEventListener("click", () => {
+    elLeadPhoneType.value = "Clean";
+    elStateValue.value = "TX";
+    elPhoneValue.value = "";
+    hideFallback();
+    elResultLine.textContent = "—";
+    lastCopyText = "";
+    setStatus("Cleared.");
+  });
+
+  async function findDids(){
+    hideFallback();
+    const inputType = elInputType.value;
+    const leadPhoneType = elLeadPhoneType.value;
+
+    let inputValue = "";
+    if(inputType === "state"){
+      inputValue = elStateValue.value;
+    } else {
+      inputValue = elPhoneValue.value.trim();
+    }
+     // ✅ Phone must be EXACTLY 10 digits (LOCKED)
+   if (inputType === "phone") {
+   const digits = inputValue.replace(/\D/g, "");
+   if (digits.length !== 10) {
+    hideFallback();
+    elResultLine.textContent = "—";
+    lastCopyText = "";
+    setStatus("Invalid phone number. Enter exactly 10 digits.");
+    return;
+   }
+ }
+
+
+    if(!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR_SCRIPT_URL_HERE")){
+      alert("Please paste your Apps Script Web App URL into SCRIPT_URL in index.html");
+      return;
     }
 
-    // Update form based on input type
-    function updateInputMode() {
-      const type = elInputType.value;
-      hideFallback();
-      
-      if (type === "state") {
-        elStateWrap.classList.remove("hidden");
-        elPhoneWrap.classList.add("hidden");
-        elStateValue.focus();
+    if(!inputValue){
+      setStatus("Please select a value.");
+      return;
+    }
+
+    setLoading(true);
+    setStatus("Checking…");
+
+    try{
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.set("action","find");
+      url.searchParams.set("inputType", inputType);
+      url.searchParams.set("inputValue", inputValue);
+      url.searchParams.set("leadPhoneType", leadPhoneType);
+
+      const res = await fetch(url.toString());
+      const data = await res.json();
+
+      if(data.success){
+        elResultLine.textContent = data.resultArrow || "—";
+        lastCopyText = data.resultCsv || "";
+        setStatus(data.message || "Done ✅");
       } else {
-        elStateWrap.classList.add("hidden");
-        elPhoneWrap.classList.remove("hidden");
-        elPhoneValue.focus();
-      }
-      
-      clearResults();
-    }
+        elResultLine.textContent = "—";
+        lastCopyText = "";
+        setStatus(data.message || "No match");
 
-    // Set status message
-    function setStatus(message, type = "ready") {
-      elStatusLine.textContent = message;
-      elStatusLine.className = `status status-${type}`;
-      
-      // Update icon based on status type
-      let iconPath = '';
-      switch(type) {
-        case 'loading':
-          iconPath = `<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>`;
-          break;
-        case 'success':
-          iconPath = `<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>`;
-          break;
-        case 'error':
-          iconPath = `<path d="M12 8v4M12 16h.01M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/>`;
-          break;
-        default:
-          iconPath = `<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 8v4M12 16h.01"/>`;
-      }
-      
-      elStatusLine.querySelector('svg').innerHTML = iconPath;
-    }
-
-    // Clear results
-    function clearResults() {
-      elResultLine.textContent = "Search results will appear here";
-      elResultLine.className = "results-placeholder";
-      lastCopyText = "";
-    }
-
-    // Hide fallback warning
-    function hideFallback() {
-      elFallbackWarn.classList.add("hidden");
-    }
-
-    // Show fallback warning
-    function showFallback(url) {
-      if (url) {
-        elFallbackBtn.href = url;
-      }
-      elFallbackWarn.classList.remove("hidden");
-    }
-
-    // Find DIDs
-    async function findDids() {
-      const inputType = elInputType.value;
-      const leadPhoneType = elLeadPhoneType.value; // Already lowercase in options
-      let inputValue = "";
-
-      // Validate input
-      if (inputType === "state") {
-        inputValue = elStateValue.value;
-        if (!inputValue) {
-          setStatus("Please select a state.", "error");
-          elStateValue.focus();
-          return;
-        }
-      } else {
-        inputValue = elPhoneValue.value.trim().replace(/\D/g, "");
-        if (inputValue.length !== 10) {
-          setStatus("Please enter exactly 10 digits for phone number.", "error");
-          elPhoneValue.focus();
-          return;
+        // fallback button only if backend sends fallbackUrl
+        if(data.fallbackUrl){
+          showFallback(data.fallbackUrl);
         }
       }
 
-      // Validate script URL
-      if (!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR_SCRIPT_URL_HERE")) {
-        setStatus("Server configuration error. Please contact administrator.", "error");
-        return;
-      }
-
-      // Set loading state
-      setStatus("Searching for Active DIDs...", "loading");
-      elBtnFind.disabled = true;
-      elBtnFindIcon.classList.add("loading");
-      clearResults();
-      hideFallback();
-
-      try {
-        // Build request URL
-        const url = new URL(SCRIPT_URL);
-        
-        // ✅ FIXED: Send correct parameters matching backend expectations
-        url.searchParams.set("action", "find");
-        url.searchParams.set("inputType", inputType);
-        url.searchParams.set("inputValue", inputValue); // ✅ Correct parameter name
-        url.searchParams.set("leadPhoneType", leadPhoneType); // ✅ Already lowercase from select options
-
-        // Debug: Log the request URL (remove in production)
-        console.log("Request URL:", url.toString());
-        
-        // Make request
-        const response = await fetch(url.toString());
-        const data = await response.json();
-        
-        // Debug: Log the response
-        console.log("Backend response:", data);
-
-        // Handle response
-        if (data.success) {
-          // Display results properly
-          if (data.resultArrow) {
-            elResultLine.textContent = data.resultArrow;
-          } else if (data.results && data.results.length > 0) {
-            elResultLine.textContent = data.results.join(" → ");
-          } else {
-            elResultLine.textContent = "No results found";
-          }
-          
-          elResultLine.className = "results-content";
-          lastCopyText = data.resultCsv || data.results?.join(", ") || "";
-          
-          const resultCount = data.results ? data.results.length : 0;
-          setStatus(data.message || `Found ${resultCount} Active DIDs.`, "success");
-        } else {
-          setStatus(data.message || "No matching DIDs found.", "error");
-          clearResults();
-          
-          if (data.fallbackUrl) {
-            showFallback(data.fallbackUrl);
-          }
-        }
-      } catch (error) {
-        console.error("Search error:", error);
-        setStatus("Network error. Please check your connection and try again.", "error");
-        clearResults();
-      } finally {
-        elBtnFind.disabled = false;
-        elBtnFindIcon.classList.remove("loading");
-      }
+    }catch(err){
+      setStatus("Error: Could not connect to backend.");
+      console.error(err);
+    }finally{
+      setLoading(false);
     }
+  }
 
-    // Copy to clipboard
-    async function copyToClipboard() {
-      if (!lastCopyText) {
-        setStatus("Nothing to copy. Please search first.", "error");
-        return;
-      }
+  elBtnFind.addEventListener("click", findDids);
 
-      try {
-        await navigator.clipboard.writeText(lastCopyText);
-        setStatus("Results copied to clipboard!", "success");
-        
-        // Visual feedback
-        elBtnCopy.innerHTML = `
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 6L9 17l-5-5"/>
-          </svg>
-          Copied!
-        `;
-        setTimeout(() => {
-          elBtnCopy.innerHTML = `
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="4" y="4" width="12" height="12" rx="2"/>
-              <path d="M8 2H4a2 2 0 00-2 2v4"/>
-            </svg>
-            Copy Results
-          `;
-        }, 2000);
-      } catch (err) {
-        // Fallback for older browsers
-        const textArea = document.createElement("textarea");
-        textArea.value = lastCopyText;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-        setStatus("Results copied to clipboard!", "success");
-      }
+  // Enter key = Find
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Enter"){
+      findDids();
     }
+  });
 
-    // Setup event listeners
-    function setupEventListeners() {
-      // Input type change
-      elInputType.addEventListener("change", updateInputMode);
-      
-      // Find button
-      elBtnFind.addEventListener("click", findDids);
-      
-      // Clear button
-      elBtnClear.addEventListener("click", () => {
-        elLeadPhoneType.value = "clean"; // ✅ Changed to lowercase
-        elStateValue.value = "TX";
-        elPhoneValue.value = "";
-        hideFallback();
-        clearResults();
-        setStatus("Form cleared. Ready to search.", "ready");
-      });
-      
-      // Copy button
-      elBtnCopy.addEventListener("click", copyToClipboard);
-      
-      // Close warning button
-      elCloseWarning.addEventListener("click", hideFallback);
-      
-      // Enter key to search
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.target.matches("button, a")) {
-          e.preventDefault();
-          findDids();
-        }
-      });
-      
-      // Phone input validation
-      elPhoneValue.addEventListener("input", (e) => {
-        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-      });
-      
-      // State select type-to-jump
-      elStateValue.addEventListener("keydown", (e) => {
-        if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
-          const searchChar = e.key.toUpperCase();
-          const options = Array.from(elStateValue.options);
-          const currentIndex = elStateValue.selectedIndex;
-          
-          for (let i = currentIndex + 1; i < options.length; i++) {
-            if (options[i].value.startsWith(searchChar)) {
-              elStateValue.selectedIndex = i;
-              break;
-            }
-          }
-        }
-      });
+  elBtnCopy.addEventListener("click", async () => {
+    if(!lastCopyText){
+      setStatus("Nothing to copy.");
+      return;
     }
+    try{
+      await navigator.clipboard.writeText(lastCopyText);
+      setStatus("Copied ✅");
+    }catch(e){
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = lastCopyText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setStatus("Copied ✅");
+    }
+  });
 
-    // Initialize on load
-    document.addEventListener("DOMContentLoaded", init);
-  </script>
+  // init
+  elStateValue.value = "TX";
+  updateInputMode();
+</script>
+
 </body>
 </html>
