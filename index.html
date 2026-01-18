@@ -307,7 +307,7 @@
   </main>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbynYBvhOkzQzfx4dANCSjlww6rimD4pj4So5PU7fIOYI_B8FBMLshnfU6NKXLynHtZb/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO6nr_jb74vRpqY39pJs6Ca7ZXnFxF46WoV8GXvTVS2bHWMPy82WsMz0GnsqiPXgf9/exec";
 
   const elInputType = document.getElementById("inputType");
   const elLeadPhoneType = document.getElementById("leadPhoneType");
@@ -382,6 +382,18 @@
     } else {
       inputValue = elPhoneValue.value.trim();
     }
+     // ✅ Phone must be EXACTLY 10 digits (LOCKED)
+   if (inputType === "phone") {
+   const digits = inputValue.replace(/\D/g, "");
+   if (digits.length !== 10) {
+    hideFallback();
+    elResultLine.textContent = "—";
+    lastCopyText = "";
+    setStatus("Invalid phone number. Enter exactly 10 digits.");
+    return;
+   }
+ }
+
 
     if(!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR_SCRIPT_URL_HERE")){
       alert("Please paste your Apps Script Web App URL into SCRIPT_URL in index.html");
