@@ -454,8 +454,8 @@
           <div class="form-group">
             <label class="form-label">Phone Status</label>
             <select class="form-select" id="leadPhoneType">
-              <option value="Clean">Clean Numbers</option>
-              <option value="Registered">Registered Numbers</option>
+              <option value="clean">Clean Numbers</option>
+              <option value="registered">Registered Numbers</option>
             </select>
             <div class="form-hint">
               Filter by phone number registration status
@@ -702,7 +702,7 @@
     // Find DIDs
     async function findDids() {
       const inputType = elInputType.value;
-      const leadPhoneType = elLeadPhoneType.value;
+      const leadPhoneType = elLeadPhoneType.value; // Already lowercase in options
       let inputValue = "";
 
       // Validate input
@@ -738,23 +738,39 @@
       try {
         // Build request URL
         const url = new URL(SCRIPT_URL);
+        
+        // ✅ FIXED: Send correct parameters matching backend expectations
         url.searchParams.set("action", "find");
         url.searchParams.set("inputType", inputType);
-        url.searchParams.set("inputValue", inputValue);
-        url.searchParams.set("leadPhoneType", leadPhoneType);
+        url.searchParams.set("inputValue", inputValue); // ✅ Correct parameter name
+        url.searchParams.set("leadPhoneType", leadPhoneType); // ✅ Already lowercase from select options
 
+        // Debug: Log the request URL (remove in production)
+        console.log("Request URL:", url.toString());
+        
         // Make request
         const response = await fetch(url.toString());
         const data = await response.json();
+        
+        // Debug: Log the response
+        console.log("Backend response:", data);
 
         // Handle response
         if (data.success) {
-          elResultLine.textContent = data.resultArrow || "No results found";
-          elResultLine.className = "results-content";
-          lastCopyText = data.resultCsv || "";
+          // Display results properly
+          if (data.resultArrow) {
+            elResultLine.textContent = data.resultArrow;
+          } else if (data.results && data.results.length > 0) {
+            elResultLine.textContent = data.results.join(" → ");
+          } else {
+            elResultLine.textContent = "No results found";
+          }
           
-          const resultCount = data.resultCsv ? data.resultCsv.split(',').length : 0;
-          setStatus(`Found ${resultCount} Active DIDs in ${inputType === 'state' ? inputValue : 'the specified area'}.`, "success");
+          elResultLine.className = "results-content";
+          lastCopyText = data.resultCsv || data.results?.join(", ") || "";
+          
+          const resultCount = data.results ? data.results.length : 0;
+          setStatus(data.message || `Found ${resultCount} Active DIDs.`, "success");
         } else {
           setStatus(data.message || "No matching DIDs found.", "error");
           clearResults();
@@ -822,7 +838,7 @@
       
       // Clear button
       elBtnClear.addEventListener("click", () => {
-        elLeadPhoneType.value = "Clean";
+        elLeadPhoneType.value = "clean"; // ✅ Changed to lowercase
         elStateValue.value = "TX";
         elPhoneValue.value = "";
         hideFallback();
