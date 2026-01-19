@@ -1,479 +1,860 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Active DIDs</title>
-  <style>
-    :root{
-      --blue:#0b5cff;
-      --blue2:#0a4fe0;
-      --bg1:#f5f9ff;
-      --bg2:#eef5ff;
-      --text:#0b1b3a;
-      --muted:#5e6b85;
-      --card:#ffffff;
-      --border:#e6eefc;
-      --warnbg:#fff7da;
-      --warnbd:#ffe08a;
-      --shadow: 0 10px 30px rgba(11,92,255,.08);
-    }
-
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:var(--text);
-      min-height:100vh;
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      backdrop-filter: blur(10px);
-      background: rgba(245,249,255,.85);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 18px;
-      z-index:10;
-    }
-
-    .header-row{
-      max-width: 980px;
-      margin: 0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .title{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-
-    .title h1{
-      margin:0;
-      font-size:18px;
-      letter-spacing:.2px;
-    }
-
-    .title p{
-      margin:0;
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .pill{
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(11,92,255,.10);
-      color: var(--blue);
-      font-size:12px;
-      font-weight:600;
-      border:1px solid rgba(11,92,255,.15);
-      white-space:nowrap;
-    }
-
-    main{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 22px 18px 40px;
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:18px;
-      box-shadow: var(--shadow);
-      padding: 18px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-
-    @media (max-width: 700px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin: 0 0 6px;
-      font-weight:600;
-    }
-
-    select, input{
-      width:100%;
-      padding:12px 12px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      font-size:14px;
-      outline:none;
-      background:#fff;
-    }
-
-    select:focus, input:focus{
-      border-color: rgba(11,92,255,.45);
-      box-shadow: 0 0 0 4px rgba(11,92,255,.10);
-    }
-
-    .actions{
-      margin-top:12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid transparent;
-      font-weight:700;
-      cursor:pointer;
-      font-size:14px;
-      transition:.15s ease;
-      user-select:none;
-    }
-
-    .btn-primary{
-      background: var(--blue);
-      color:#fff;
-    }
-    .btn-primary:hover{ background: var(--blue2); }
-
-    .btn-outline{
-      background:#fff;
-      border-color: rgba(11,92,255,.28);
-      color: var(--blue);
-    }
-    .btn-outline:hover{
-      border-color: rgba(11,92,255,.55);
-      background: rgba(11,92,255,.06);
-    }
-
-    .result{
-      margin-top:14px;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      background: #fbfdff;
-    }
-
-    .result-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .result-title{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .result-line{
-      margin-top:8px;
-      font-size:16px;
-      font-weight:800;
-      letter-spacing:.3px;
-      line-height:1.4;
-    }
-
-    .hint{
-      margin-top:6px;
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .warn{
-      margin-top:12px;
-      padding:12px;
-      border-radius:14px;
-      border:1px solid var(--warnbd);
-      background: var(--warnbg);
-      color:#4c3b00;
-      display:none;
-    }
-
-    .warn strong{display:block; margin-bottom:4px}
-
-    .small{
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .statusline{
-      margin-top:10px;
-      font-size:13px;
-      color:var(--muted);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active DIDs Portal v4</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d62d9;
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #dfe6e9;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --error: #e74c3c;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            transition: padding-right 0.4s ease;
+        }
+        
+        body.drawer-open {
+            padding-right: 420px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            transition: all 0.4s ease;
+        }
+        
+        .drawer-open .container {
+            margin-right: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 18px 30px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-header {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        
+        .btn-header:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+        }
+        
+        /* Control Row */
+        .control-row {
+            background: var(--card);
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow);
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+        }
+        
+        .control-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        select, input {
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.2s;
+            height: 45px;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+        
+        /* Search Row */
+        .search-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        
+        .btn-search {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-search:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+        }
+        
+        .btn-clear {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+        
+        /* Result Row */
+        .result-row {
+            background: var(--card);
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .result-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+        
+        .result-content {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text);
+            flex-grow: 1;
+            margin: 0 25px;
+            padding: 12px 18px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            word-break: break-word;
+        }
+        
+        .btn-copy {
+            background: var(--success);
+            color: white;
+            padding: 12px 26px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        .btn-copy:hover {
+            background: #219653;
+            transform: translateY(-1px);
+        }
+        
+        .btn-copy.copied {
+            background: #2ecc71;
+        }
+        
+        /* Fallback */
+        .fallback-container {
+            text-align: center;
+            margin: 15px 0 30px;
+        }
+        
+        .btn-fallback {
+            background: var(--warning);
+            color: #2c3e50;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .btn-fallback:hover {
+            background: #e67e22;
+            transform: translateY(-1px);
+        }
+        
+        /* Updates */
+        .updates-box {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .updates-title {
+            font-size: 18px;
+            margin-bottom: 18px;
+            color: var(--text);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .updates-title::before {
+            content: "🔄";
+            font-size: 16px;
+        }
+        
+        .updates-placeholder {
+            color: var(--text-light);
+            font-style: italic;
+            text-align: center;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed var(--border);
+        }
+        
+        /* Message */
+        .message {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .message.success {
+            background: #d5f4e6;
+            color: #155724;
+            border: 1px solid #b1dfbb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1b0b7;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Drawer */
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -420px;
+            width: 420px;
+            height: 100vh;
+            background: var(--card);
+            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+            padding: 30px;
+            overflow-y: auto;
+            transition: right 0.4s ease;
+            z-index: 1000;
+        }
+        
+        .drawer.open {
+            right: 0;
+        }
+        
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .drawer-title {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .btn-close:hover {
+            background: #f8f9fa;
+            color: var(--error);
+        }
+        
+        .drawer-control {
+            margin-bottom: 30px;
+        }
+        
+        .details-container {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .detail-item {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 15px;
+            align-items: start;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-value {
+            font-size: 15px;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+        
+        .geo-box {
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        /* Value switcher */
+        .value-container {
+            display: none;
+        }
+        
+        .value-container.active {
+            display: block;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1100px) {
+            body.drawer-open {
+                padding-right: 0;
+            }
+            
+            .drawer {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .drawer-open .container {
+                margin-right: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .control-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            .control-group {
+                width: 100%;
+            }
+            
+            .result-row {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .result-content {
+                margin: 0;
+                width: 100%;
+            }
+            
+            .detail-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="header-row">
-      <div class="title">
-        <h1>Active DIDs Portal</h1>
-        <p>Fast routing by State or Phone • Priority sorted • Copy-ready</p>
-      </div>
-      <div class="pill">Live</div>
+    <div class="container">
+        <div class="header">
+            <div class="header-title">Active DIDs Portal ● Priority Sorted</div>
+            <button class="btn-header" id="detailedViewBtn">Detailed View</button>
+        </div>
+        
+        <div class="control-row">
+            <div class="control-group">
+                <div class="control-label">Choose Input</div>
+                <select id="inputType">
+                    <option value="">Select Type</option>
+                    <option value="state">State</option>
+                    <option value="phone">Phone</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-label">Choose Status</div>
+                <select id="leadPhoneType">
+                    <option value="">Select Status</option>
+                    <option value="clean">Clean</option>
+                    <option value="registered">Registered</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-label" id="valueLabel">Value</div>
+                <div id="stateContainer" class="value-container">
+                    <select id="stateSelect">
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div id="phoneContainer" class="value-container">
+                    <input type="text" id="phoneInput" placeholder="Enter 10-digit phone" maxlength="10">
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-row">
+            <button id="searchBtn" class="btn btn-search">Search</button>
+            <button id="clearBtn" class="btn btn-clear">Clear</button>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <div class="result-row">
+            <div class="result-label">Result:</div>
+            <div id="resultContent" class="result-content"></div>
+            <button id="copyBtn" class="btn-copy">Copy</button>
+        </div>
+        
+        <div id="fallbackContainer" class="fallback-container"></div>
+        
+        <div class="updates-box">
+            <div class="updates-title">Realtime Updates</div>
+            <div class="updates-placeholder">
+                No updates at the moment
+            </div>
+        </div>
     </div>
-  </header>
-
-  <main>
-    <div class="card">
-      <div class="grid">
-        <div>
-          <label>Choose Input</label>
-          <select id="inputType">
-            <option value="state">State</option>
-            <option value="phone">Phone</option>
-          </select>
+    
+    <!-- Drawer -->
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-title">Detailed Breakdown</div>
+            <button class="btn-close" id="closeDrawerBtn">×</button>
         </div>
-
-        <div>
-          <label>Choose Status</label>
-          <select id="leadPhoneType">
-            <option value="Clean">Clean</option>
-            <option value="Registered">Registered</option>
-          </select>
+        
+        <div class="drawer-control">
+            <div class="control-label">Select Preset</div>
+            <select id="presetSelect">
+                <option value="">Select a preset</option>
+            </select>
         </div>
-
-        <div id="stateWrap">
-          <label>State</label>
-          <select id="stateValue">
-            <!-- Type-to-jump works automatically -->
-            <option value="AL">AL</option><option value="AK">AK</option><option value="AZ">AZ</option><option value="AR">AR</option>
-            <option value="CA">CA</option><option value="CO">CO</option><option value="CT">CT</option><option value="DE">DE</option>
-            <option value="DC">DC</option><option value="FL">FL</option><option value="GA">GA</option><option value="HI">HI</option>
-            <option value="ID">ID</option><option value="IL">IL</option><option value="IN">IN</option><option value="IA">IA</option>
-            <option value="KS">KS</option><option value="KY">KY</option><option value="LA">LA</option><option value="ME">ME</option>
-            <option value="MD">MD</option><option value="MA">MA</option><option value="MI">MI</option><option value="MN">MN</option>
-            <option value="MS">MS</option><option value="MO">MO</option><option value="MT">MT</option><option value="NE">NE</option>
-            <option value="NV">NV</option><option value="NH">NH</option><option value="NJ">NJ</option><option value="NM">NM</option>
-            <option value="NY">NY</option><option value="NC">NC</option><option value="ND">ND</option><option value="OH">OH</option>
-            <option value="OK">OK</option><option value="OR">OR</option><option value="PA">PA</option><option value="RI">RI</option>
-            <option value="SC">SC</option><option value="SD">SD</option><option value="TN">TN</option><option value="TX">TX</option>
-            <option value="UT">UT</option><option value="VT">VT</option><option value="VA">VA</option><option value="WA">WA</option>
-            <option value="WV">WV</option><option value="WI">WI</option><option value="WY">WY</option>
-          </select>
-          <div class="small">Tip: Click dropdown and type <b>TX</b> or <b>AZ</b> then press Enter.</div>
+        
+        <div id="detailsContainer" class="details-container">
+            <!-- Details will be inserted here -->
         </div>
-
-        <div id="phoneWrap" style="display:none;">
-          <label>Phone (10 digits)</label>
-          <input id="phoneValue" placeholder="8392939105" inputmode="numeric" />
-          <div class="small">Tip: paste number without dashes for fastest match.</div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn btn-primary" id="btnFind">Find Active DIDs</button>
-        <button class="btn btn-outline" id="btnClear">Clear</button>
-      </div>
-
-      <div class="statusline" id="statusLine">Ready.</div>
-
-      <div class="result" id="resultBox">
-        <div class="result-top">
-          <div class="result-title">Result</div>
-          <button class="btn btn-outline" id="btnCopy" style="padding:10px 12px;">Copy</button>
-        </div>
-        <div class="result-line" id="resultLine">—</div>
-        <div class="hint">Copy format: <b>comma separated</b> (best for VICIdial)</div>
-
-        <div class="warn" id="fallbackWarn">
-          <strong>No match found — use Area Code Dashboard</strong>
-          This phone area code didn’t match any Active DIDs in our routing table.
-          <div style="margin-top:10px;">
-            <a class="btn btn-primary" id="fallbackBtn" target="_blank" rel="noopener noreferrer"
-              style="display:inline-block; text-decoration:none;">
-              Open Phone Search Dashboard
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
-  </main>
-
-<script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO6nr_jb74vRpqY39pJs6Ca7ZXnFxF46WoV8GXvTVS2bHWMPy82WsMz0GnsqiPXgf9/exec";
-
-  const elInputType = document.getElementById("inputType");
-  const elLeadPhoneType = document.getElementById("leadPhoneType");
-  const elStateWrap = document.getElementById("stateWrap");
-  const elPhoneWrap = document.getElementById("phoneWrap");
-  const elStateValue = document.getElementById("stateValue");
-  const elPhoneValue = document.getElementById("phoneValue");
-  const elBtnFind = document.getElementById("btnFind");
-  const elBtnClear = document.getElementById("btnClear");
-  const elBtnCopy = document.getElementById("btnCopy");
-  const elResultLine = document.getElementById("resultLine");
-  const elStatusLine = document.getElementById("statusLine");
-  const elFallbackWarn = document.getElementById("fallbackWarn");
-  const elFallbackBtn = document.getElementById("fallbackBtn");
-
-  let lastCopyText = "";
-
-  function setLoading(isLoading){
-    elBtnFind.disabled = isLoading;
-    elBtnFind.textContent = isLoading ? "Checking lines…" : "Find Active DIDs";
-  }
-
-  function setStatus(text){
-    elStatusLine.textContent = text;
-  }
-
-  function hideFallback(){
-    elFallbackWarn.style.display = "none";
-    elFallbackBtn.href = "https://skydreammers.com/webform/dashboard.php";
-  }
-
-  function showFallback(url){
-    elFallbackWarn.style.display = "block";
-    elFallbackBtn.href = url || "https://skydreammers.com/webform/dashboard.php";
-  }
-
-  function updateInputMode(){
-    const type = elInputType.value;
-    hideFallback();
-    elResultLine.textContent = "—";
-    lastCopyText = "";
-    if(type === "state"){
-      elStateWrap.style.display = "block";
-      elPhoneWrap.style.display = "none";
-    } else {
-      elStateWrap.style.display = "none";
-      elPhoneWrap.style.display = "block";
-      elPhoneValue.focus();
-    }
-  }
-
-  elInputType.addEventListener("change", updateInputMode);
-
-  elBtnClear.addEventListener("click", () => {
-    elLeadPhoneType.value = "Clean";
-    elStateValue.value = "TX";
-    elPhoneValue.value = "";
-    hideFallback();
-    elResultLine.textContent = "—";
-    lastCopyText = "";
-    setStatus("Cleared.");
-  });
-
-  async function findDids(){
-    hideFallback();
-    const inputType = elInputType.value;
-    const leadPhoneType = elLeadPhoneType.value;
-
-    let inputValue = "";
-    if(inputType === "state"){
-      inputValue = elStateValue.value;
-    } else {
-      inputValue = elPhoneValue.value.trim();
-    }
-     // ✅ Phone must be EXACTLY 10 digits (LOCKED)
-   if (inputType === "phone") {
-   const digits = inputValue.replace(/\D/g, "");
-   if (digits.length !== 10) {
-    hideFallback();
-    elResultLine.textContent = "—";
-    lastCopyText = "";
-    setStatus("Invalid phone number. Enter exactly 10 digits.");
-    return;
-   }
- }
-
-
-    if(!SCRIPT_URL || SCRIPT_URL.includes("PASTE_YOUR_SCRIPT_URL_HERE")){
-      alert("Please paste your Apps Script Web App URL into SCRIPT_URL in index.html");
-      return;
-    }
-
-    if(!inputValue){
-      setStatus("Please select a value.");
-      return;
-    }
-
-    setLoading(true);
-    setStatus("Checking…");
-
-    try{
-      const url = new URL(SCRIPT_URL);
-      url.searchParams.set("action","find");
-      url.searchParams.set("inputType", inputType);
-      url.searchParams.set("inputValue", inputValue);
-      url.searchParams.set("leadPhoneType", leadPhoneType);
-
-      const res = await fetch(url.toString());
-      const data = await res.json();
-
-      if(data.success){
-        elResultLine.textContent = data.resultArrow || "—";
-        lastCopyText = data.resultCsv || "";
-        setStatus(data.message || "Done ✅");
-      } else {
-        elResultLine.textContent = "—";
-        lastCopyText = "";
-        setStatus(data.message || "No match");
-
-        // fallback button only if backend sends fallbackUrl
-        if(data.fallbackUrl){
-          showFallback(data.fallbackUrl);
+    
+    <script>
+        // CONFIGURATION
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby44WE1uqg5cHqyVCUAd2KYO-C17nP_w8IpT_RFiNGCHasLVrHHwTbMpYwmEQDy6dbH/exec";
+        
+        // DOM Elements
+        const inputType = document.getElementById('inputType');
+        const leadPhoneType = document.getElementById('leadPhoneType');
+        const stateContainer = document.getElementById('stateContainer');
+        const phoneContainer = document.getElementById('phoneContainer');
+        const stateSelect = document.getElementById('stateSelect');
+        const phoneInput = document.getElementById('phoneInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const resultContent = document.getElementById('resultContent');
+        const copyBtn = document.getElementById('copyBtn');
+        const fallbackContainer = document.getElementById('fallbackContainer');
+        const messageContainer = document.getElementById('messageContainer');
+        const detailedViewBtn = document.getElementById('detailedViewBtn');
+        const drawer = document.getElementById('drawer');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+        const presetSelect = document.getElementById('presetSelect');
+        const detailsContainer = document.getElementById('detailsContainer');
+        
+        // State list
+        const states = [
+            'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
+            'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
+            'MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
+            'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',
+            'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
+        ];
+        
+        // Current search results
+        let currentResults = [];
+        
+        // Initialize
+        function init() {
+            // Populate states
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+            
+            // Event listeners
+            inputType.addEventListener('change', handleInputTypeChange);
+            phoneInput.addEventListener('input', handlePhoneInput);
+            searchBtn.addEventListener('click', handleSearch);
+            clearBtn.addEventListener('click', handleClear);
+            copyBtn.addEventListener('click', handleCopy);
+            detailedViewBtn.addEventListener('click', openDrawer);
+            closeDrawerBtn.addEventListener('click', closeDrawer);
+            presetSelect.addEventListener('change', handlePresetSelect);
+            
+            // Enter key on phone input
+            phoneInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
         }
-      }
-
-    }catch(err){
-      setStatus("Error: Could not connect to backend.");
-      console.error(err);
-    }finally{
-      setLoading(false);
-    }
-  }
-
-  elBtnFind.addEventListener("click", findDids);
-
-  // Enter key = Find
-  document.addEventListener("keydown", (e) => {
-    if(e.key === "Enter"){
-      findDids();
-    }
-  });
-
-  elBtnCopy.addEventListener("click", async () => {
-    if(!lastCopyText){
-      setStatus("Nothing to copy.");
-      return;
-    }
-    try{
-      await navigator.clipboard.writeText(lastCopyText);
-      setStatus("Copied ✅");
-    }catch(e){
-      // fallback
-      const ta = document.createElement("textarea");
-      ta.value = lastCopyText;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      setStatus("Copied ✅");
-    }
-  });
-
-  // init
-  elStateValue.value = "TX";
-  updateInputMode();
-</script>
-
+        
+        function handleInputTypeChange() {
+            const type = inputType.value;
+            
+            // Hide all
+            stateContainer.classList.remove('active');
+            phoneContainer.classList.remove('active');
+            
+            // Show selected
+            if (type === 'state') {
+                stateContainer.classList.add('active');
+                stateSelect.focus();
+            } else if (type === 'phone') {
+                phoneContainer.classList.add('active');
+                phoneInput.focus();
+            }
+        }
+        
+        function handlePhoneInput(e) {
+            // Allow only digits
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+            
+            // Auto-format if needed
+            if (value.length > 3 && value.length <= 6) {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3);
+            } else if (value.length > 6) {
+                e.target.value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
+            }
+        }
+        
+        async function handleSearch() {
+            const type = inputType.value;
+            const phoneType = leadPhoneType.value;
+            let value = '';
+            
+            // Get value based on type
+            if (type === 'state') {
+                value = stateSelect.value;
+            } else if (type === 'phone') {
+                value = phoneInput.value.replace(/\D/g, '');
+                if (value.length !== 10) {
+                    showMessage('Invalid phone number. Enter exactly 10 digits.', 'error');
+                    return;
+                }
+            }
+            
+            // Validation
+            if (!type || !phoneType || !value) {
+                showMessage('Please fill all fields.', 'error');
+                return;
+            }
+            
+            // Clear previous
+            messageContainer.innerHTML = '';
+            fallbackContainer.innerHTML = '';
+            
+            // Show loading
+            resultContent.textContent = 'Searching...';
+            resultContent.style.color = 'var(--text-light)';
+            
+            try {
+                const params = new URLSearchParams({
+                    action: 'find',
+                    inputType: type,
+                    inputValue: value,
+                    leadPhoneType: phoneType
+                });
+                
+                const response = await fetch(`${SCRIPT_URL}?${params}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    resultContent.textContent = data.resultCsv || 'No results';
+                    resultContent.style.color = 'var(--text)';
+                    currentResults = data.results;
+                    populatePresetSelect();
+                    
+                    if (data.fallbackUrl) {
+                        fallbackContainer.innerHTML = `
+                            <a href="${data.fallbackUrl}" target="_blank" class="btn-fallback">
+                                🔗 Open Area Code Dashboard
+                            </a>
+                        `;
+                    }
+                } else {
+                    showMessage(data.message, 'error');
+                    resultContent.textContent = '';
+                    currentResults = [];
+                    
+                    if (data.fallbackUrl) {
+                        fallbackContainer.innerHTML = `
+                            <a href="${data.fallbackUrl}" target="_blank" class="btn-fallback">
+                                🔗 Open Area Code Dashboard
+                            </a>
+                        `;
+                    }
+                }
+            } catch (error) {
+                showMessage('Network error. Please check your connection.', 'error');
+                resultContent.textContent = '';
+                currentResults = [];
+            }
+        }
+        
+        function handleClear() {
+            inputType.value = '';
+            leadPhoneType.value = '';
+            stateSelect.value = '';
+            phoneInput.value = '';
+            resultContent.textContent = '';
+            currentResults = [];
+            fallbackContainer.innerHTML = '';
+            messageContainer.innerHTML = '';
+            
+            // Hide value containers
+            stateContainer.classList.remove('active');
+            phoneContainer.classList.remove('active');
+            
+            // Clear drawer
+            presetSelect.innerHTML = '<option value="">Select a preset</option>';
+            detailsContainer.innerHTML = '';
+        }
+        
+        function handleCopy() {
+            const text = resultContent.textContent;
+            if (!text) return;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        function populatePresetSelect() {
+            presetSelect.innerHTML = '<option value="">Select a preset</option>';
+            currentResults.forEach(preset => {
+                const option = document.createElement('option');
+                option.value = preset;
+                option.textContent = preset;
+                presetSelect.appendChild(option);
+            });
+        }
+        
+        async function handlePresetSelect(e) {
+            const preset = e.target.value;
+            if (!preset) {
+                detailsContainer.innerHTML = '';
+                return;
+            }
+            
+            try {
+                const params = new URLSearchParams({
+                    action: 'details',
+                    preset: preset
+                });
+                
+                const response = await fetch(`${SCRIPT_URL}?${params}`);
+                const data = await response.json();
+                
+                if (data.success && data.detail) {
+                    renderDetails(data.detail);
+                } else {
+                    detailsContainer.innerHTML = `<div class="message error">${data.message}</div>`;
+                }
+            } catch (error) {
+                detailsContainer.innerHTML = '<div class="message error">Failed to load details.</div>';
+            }
+        }
+        
+        function renderDetails(detail) {
+            const fields = [
+                { label: 'Campaign', key: 'campaign' },
+                { label: 'Date', key: 'date' },
+                { label: 'Preset', key: 'preset' },
+                { label: 'Number', key: 'number' },
+                { label: 'Status', key: 'status' },
+                { label: 'Transfer Type', key: 'transferType' },
+                { label: 'Webform', key: 'webform' },
+                { label: 'Buffer', key: 'buffer' },
+                { label: 'Age', key: 'age' },
+                { label: 'Shift Timings', key: 'shiftTimings' },
+                { label: 'Break Timings', key: 'breakTimings' },
+                { label: 'Notes', key: 'notes' }
+            ];
+            
+            let html = '';
+            
+            // Add Geo separately (special formatting)
+            html += `
+                <div class="detail-item">
+                    <div class="detail-label">Geo</div>
+                    <div class="geo-box detail-value">${detail.geo || 'N/A'}</div>
+                </div>
+            `;
+            
+            // Add other fields
+            fields.forEach(field => {
+                const value = detail[field.key] || 'N/A';
+                html += `
+                    <div class="detail-item">
+                        <div class="detail-label">${field.label}</div>
+                        <div class="detail-value">${value}</div>
+                    </div>
+                `;
+            });
+            
+            detailsContainer.innerHTML = html;
+        }
+        
+        function showMessage(text, type) {
+            messageContainer.innerHTML = `
+                <div class="message ${type}">
+                    ${text}
+                </div>
+            `;
+            
+            // Auto-remove success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    if (messageContainer.firstChild) {
+                        messageContainer.firstChild.style.opacity = '0';
+                        setTimeout(() => {
+                            messageContainer.innerHTML = '';
+                        }, 300);
+                    }
+                }, 5000);
+            }
+        }
+        
+        function openDrawer() {
+            drawer.classList.add('open');
+            document.body.classList.add('drawer-open');
+        }
+        
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            document.body.classList.remove('drawer-open');
+        }
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
 </html>
