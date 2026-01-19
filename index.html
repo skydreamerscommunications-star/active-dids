@@ -305,7 +305,7 @@
                                 <i class="fas fa-table mr-2 text-blue-600"></i>
                                 Detailed Breakdown
                             </h2>
-                            <p class="text-sm text-gray-500 mt-1">Browse DID configuration details</p>
+                            <p class="text-sm text-gray-500 mt-1">Detailed View — All Presets</p>
                         </div>
                         <button id="closeDrawerBtn" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-150">
                             <i class="fas fa-times text-xl"></i>
@@ -314,18 +314,20 @@
                     
                     <!-- Preset Selector -->
                     <div class="mb-8">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-cog mr-1"></i> Select Preset
-                        </label>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                <i class="fas fa-cog mr-1"></i> Select Preset
+                            </label>
+                            <div id="presetCount" class="text-xs text-gray-500"></div>
+                        </div>
                         <div class="relative">
                             <select id="presetSelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                <option value="">Select Preset</option>
+                                <option value="">No presets available</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <i class="fas fa-chevron-down text-gray-400"></i>
                             </div>
                         </div>
-                        <div id="presetStatus" class="mt-1 text-xs text-gray-500"></div>
                     </div>
                     
                     <!-- Details Container -->
@@ -333,7 +335,7 @@
                         <div class="text-center py-12 text-gray-400">
                             <i class="fas fa-info-circle text-4xl mb-4"></i>
                             <p class="text-lg font-medium">Select a preset to view details</p>
-                            <p class="text-sm mt-1">All DIDs (Active and Paused) are available</p>
+                            <p class="text-sm mt-1">Perform a search to load presets</p>
                         </div>
                     </div>
                 </div>
@@ -365,9 +367,9 @@
         const closeDrawerBtn = document.getElementById('closeDrawerBtn');
         const leftWrap = document.getElementById('leftWrap');
         const presetSelect = document.getElementById('presetSelect');
+        const presetCount = document.getElementById('presetCount');
         const detailsContainer = document.getElementById('detailsContainer');
         const resultMeta = document.getElementById('resultMeta');
-        const presetStatus = document.getElementById('presetStatus');
         
         // State list (US states)
         const states = [
@@ -381,8 +383,9 @@
         // Variables
         let currentResults = [];
         let drawerOpen = false;
-        let allPresets = [];
         let isSearching = false;
+        let currentSelectedPreset = '';
+        let hasAutoSelectedFirst = false;
         
         // Initialize
         function init() {
@@ -418,6 +421,7 @@
             
             // Initial UI state
             updateValueLabel();
+            updatePresetDropdown(); // Initialize empty dropdown
         }
         
         function handleInputTypeChange() {
@@ -492,6 +496,7 @@
             clearMessages();
             fallbackContainer.innerHTML = '';
             resultMeta.innerHTML = '';
+            hasAutoSelectedFirst = false; // Reset auto-select flag
             
             // Show loading state
             resultContent.innerHTML = `<div class="flex items-center text-gray-500"><div class="loading h-4 w-4 rounded-full bg-blue-500 mr-3"></div>Searching...</div>`;
@@ -522,7 +527,11 @@
                         resultMeta.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500"></i> No Active DID matched this input`;
                     }
                     
+                    // Update current results
                     currentResults = data.results;
+                    
+                    // Update preset dropdown with new results
+                    updatePresetDropdown();
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -537,6 +546,7 @@
                     resultContent.innerHTML = `<span class="text-gray-400">No results</span>`;
                     resultMeta.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500"></i> No Active DID matched this input`;
                     currentResults = [];
+                    updatePresetDropdown();
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -552,6 +562,7 @@
                 resultContent.innerHTML = `<span class="text-gray-400">Connection error</span>`;
                 resultMeta.innerHTML = `<i class="fas fa-exclamation-circle text-red-500"></i> Network error`;
                 currentResults = [];
+                updatePresetDropdown();
             } finally {
                 searchBtn.innerHTML = `<i class="fas fa-search mr-2"></i> Search`;
                 searchBtn.disabled = false;
@@ -567,18 +578,21 @@
             resultContent.innerHTML = '<span class="text-gray-400">Results will appear here...</span>';
             resultMeta.innerHTML = '';
             currentResults = [];
+            currentSelectedPreset = '';
+            hasAutoSelectedFirst = false;
             fallbackContainer.innerHTML = '';
             clearMessages();
             
+            // Reset preset dropdown
+            updatePresetDropdown();
+            
             // Reset drawer if open
             if (drawerOpen) {
-                presetSelect.value = '';
-                presetStatus.innerHTML = '';
                 detailsContainer.innerHTML = `
                     <div class="text-center py-12 text-gray-400">
                         <i class="fas fa-info-circle text-4xl mb-4"></i>
                         <p class="text-lg font-medium">Select a preset to view details</p>
-                        <p class="text-sm mt-1">All DIDs (Active and Paused) are available</p>
+                        <p class="text-sm mt-1">Perform a search to load presets</p>
                     </div>
                 `;
             }
@@ -624,82 +638,46 @@
             });
         }
         
-        // Load all presets for management view
-        async function loadAllPresets() {
-            presetSelect.innerHTML = '<option value="">Select Preset</option>';
-            presetSelect.disabled = true;
-            presetStatus.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Loading presets...';
-            
-            try {
-                // Try to load from backend
-                const response = await fetch(`${SCRIPT_URL}?action=listPresets`);
+        // Update preset dropdown with current results
+        function updatePresetDropdown() {
+            if (currentResults.length === 0) {
+                presetSelect.innerHTML = '<option value="">No presets available</option>';
+                presetSelect.disabled = true;
+                presetCount.innerHTML = '';
+            } else {
+                presetSelect.disabled = false;
+                presetCount.innerHTML = `${currentResults.length} presets`;
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success && data.presets && data.presets.length > 0) {
-                        allPresets = data.presets;
-                        populatePresetSelect();
-                        presetStatus.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-1"></i> Loaded ${allPresets.length} presets`;
-                        return;
-                    }
+                // Save current selection before rebuilding
+                const currentValue = presetSelect.value;
+                
+                // Rebuild options
+                presetSelect.innerHTML = '<option value="">Select Preset</option>';
+                
+                currentResults.forEach(preset => {
+                    const option = document.createElement('option');
+                    option.value = preset;
+                    option.textContent = preset;
+                    presetSelect.appendChild(option);
+                });
+                
+                // Restore previous selection if it exists in new results
+                if (currentValue && currentResults.includes(currentValue)) {
+                    presetSelect.value = currentValue;
+                } else if (!hasAutoSelectedFirst && drawerOpen) {
+                    // Auto-select first preset only once when drawer is open
+                    presetSelect.value = currentResults[0];
+                    hasAutoSelectedFirst = true;
+                    
+                    // Load details for the first preset
+                    setTimeout(() => {
+                        loadPresetDetails(currentResults[0]);
+                    }, 100);
                 }
-                
-                // Fallback: Try to get presets from find with broad search
-                const findResponse = await fetch(`${SCRIPT_URL}?action=find&inputType=state&inputValue=TX&leadPhoneType=clean`);
-                if (findResponse.ok) {
-                    const findData = await findResponse.json();
-                    if (findData.success && findData.results && findData.results.length > 0) {
-                        allPresets = findData.results;
-                        populatePresetSelect();
-                        presetStatus.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-1"></i> Loaded ${allPresets.length} presets`;
-                        return;
-                    }
-                }
-                
-                // Final fallback with sample presets
-                allPresets = ['D2 CPL', 'D3 CPL', 'D4 REV', 'D5 RTB', 'D16 CPL', 'D25 CPL', 'D10 CPL', 'D15 RTB'];
-                populatePresetSelect();
-                presetStatus.innerHTML = `Select from available presets`;
-                
-            } catch (error) {
-                allPresets = ['D2 CPL', 'D3 CPL', 'D4 REV', 'D5 RTB', 'D16 CPL', 'D25 CPL'];
-                populatePresetSelect();
-                presetStatus.innerHTML = `Run a search or select from available presets`;
             }
         }
         
-        function populatePresetSelect() {
-            presetSelect.innerHTML = '<option value="">Select Preset</option>';
-            
-            // Sort presets: Active ones first, then by priority/name
-            const sortedPresets = [...allPresets].sort((a, b) => {
-                // Simple alphabetical sort for now
-                return a.localeCompare(b);
-            });
-            
-            sortedPresets.forEach(preset => {
-                const option = document.createElement('option');
-                option.value = preset;
-                option.textContent = preset;
-                presetSelect.appendChild(option);
-            });
-            
-            presetSelect.disabled = false;
-            
-            // Auto-select best preset
-            if (sortedPresets.length > 0) {
-                // Try to find an active preset first
-                const activePreset = sortedPresets.find(p => p.includes('CPL')) || sortedPresets[0];
-                presetSelect.value = activePreset;
-                
-                // Load details automatically
-                setTimeout(() => {
-                    handlePresetSelect({ target: presetSelect });
-                }, 100);
-            }
-        }
-        
-        async function handlePresetSelect(e) {
+        function handlePresetSelect(e) {
             const preset = e.target.value;
             if (!preset) {
                 detailsContainer.innerHTML = `
@@ -711,6 +689,13 @@
                 `;
                 return;
             }
+            
+            currentSelectedPreset = preset;
+            loadPresetDetails(preset);
+        }
+        
+        async function loadPresetDetails(preset) {
+            if (!preset) return;
             
             try {
                 // Show loading skeleton
@@ -913,8 +898,14 @@
                 leftWrap.classList.add('max-w-none', 'mx-0');
                 drawerOpen = true;
                 
-                // Load all presets for management view
-                await loadAllPresets();
+                // If we have results and no preset is selected yet, auto-select first one
+                if (currentResults.length > 0 && !presetSelect.value && !hasAutoSelectedFirst) {
+                    hasAutoSelectedFirst = true;
+                    presetSelect.value = currentResults[0];
+                    setTimeout(() => {
+                        loadPresetDetails(currentResults[0]);
+                    }, 100);
+                }
             }
         }
         
