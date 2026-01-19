@@ -16,6 +16,7 @@
         body {
             background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
         /* Custom Scrollbar */
@@ -36,30 +37,6 @@
         
         ::-webkit-scrollbar-thumb:hover {
             background: #a8a8a8;
-        }
-        
-        /* Drawer Animation */
-        .drawer-enter {
-            transform: translateX(100%);
-        }
-        
-        .drawer-enter-active {
-            transform: translateX(0);
-            transition: transform 300ms ease-out;
-        }
-        
-        .drawer-exit {
-            transform: translateX(0);
-        }
-        
-        .drawer-exit-active {
-            transform: translateX(100%);
-            transition: transform 300ms ease-out;
-        }
-        
-        /* Phone input formatting */
-        .phone-input::placeholder {
-            color: #9ca3af;
         }
         
         /* Badge styles */
@@ -122,16 +99,6 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         }
         
-        /* Active state for buttons */
-        .btn-active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-        
-        .btn-active:active {
-            transform: translateY(1px);
-        }
-        
         /* Loading animation */
         @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -151,13 +118,25 @@
         .fade-in {
             animation: fadeIn 0.3s ease-out forwards;
         }
+        
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body class="text-gray-800">
     <!-- Main Container -->
     <div class="flex min-h-screen">
         <!-- Main Content -->
-        <div id="mainContent" class="flex-1 transition-all duration-300 ease-in-out">
+        <div id="mainContent" class="flex-1 min-w-0 transition-all duration-300 ease-out">
             <div class="max-w-5xl mx-auto px-4 py-6">
                 <!-- Header -->
                 <div class="flex items-center justify-between mb-8">
@@ -229,7 +208,7 @@
                             </div>
                             <div id="phoneContainer" class="hidden">
                                 <div class="relative">
-                                    <input type="text" id="phoneInput" placeholder="e.g. 912-359-2014" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none phone-input bg-white text-gray-800 font-medium">
+                                    <input type="text" id="phoneInput" placeholder="e.g. 912-359-2014" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-800 font-medium">
                                     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
                                         <i class="fas fa-phone text-gray-400"></i>
                                     </div>
@@ -241,11 +220,11 @@
                 
                 <!-- Search Row -->
                 <div class="flex justify-center gap-4 mb-8">
-                    <button id="searchBtn" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 active:transform active:translate-y-0.5">
+                    <button id="searchBtn" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 active:scale-95">
                         <i class="fas fa-search"></i>
                         Search
                     </button>
-                    <button id="clearBtn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold shadow-sm hover:shadow transition-all duration-200 active:transform active:translate-y-0.5">
+                    <button id="clearBtn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-95">
                         <i class="fas fa-eraser"></i>
                         Clear
                     </button>
@@ -262,7 +241,7 @@
                                 <span class="text-gray-400">Results will appear here...</span>
                             </div>
                         </div>
-                        <button id="copyBtn" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold whitespace-nowrap transition-all duration-200 active:transform active:translate-y-0.5">
+                        <button id="copyBtn" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-semibold whitespace-nowrap transition-all duration-200 active:scale-95">
                             <i class="fas fa-copy"></i>
                             Copy
                         </button>
@@ -294,43 +273,45 @@
         </div>
         
         <!-- Drawer -->
-        <div id="drawer" class="hidden w-[480px] border-l border-gray-200 bg-white shadow-xl overflow-y-auto">
-            <div class="p-6">
-                <!-- Drawer Header -->
-                <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
-                    <div>
-                        <h2 class="text-xl font-bold text-gray-900 flex items-center">
-                            <i class="fas fa-table mr-2 text-blue-600"></i>
-                            Detailed Breakdown
-                        </h2>
-                        <p class="text-sm text-gray-500 mt-1">View DID configuration details</p>
+        <div id="drawer" class="w-0 overflow-hidden transition-all duration-300 ease-out flex-shrink-0">
+            <div class="w-[480px] h-full border-l border-gray-200 bg-white shadow-xl overflow-y-auto">
+                <div class="p-6">
+                    <!-- Drawer Header -->
+                    <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                <i class="fas fa-table mr-2 text-blue-600"></i>
+                                Detailed Breakdown
+                            </h2>
+                            <p class="text-sm text-gray-500 mt-1">Management View - All DIDs</p>
+                        </div>
+                        <button id="closeDrawerBtn" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
                     </div>
-                    <button id="closeDrawerBtn" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-150">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-                
-                <!-- Preset Selector -->
-                <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-cog mr-1"></i> Select Preset
-                    </label>
-                    <div class="relative">
-                        <select id="presetSelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                            <option value="">Select a preset from results</option>
-                        </select>
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                            <i class="fas fa-chevron-down text-gray-400"></i>
+                    
+                    <!-- Preset Selector -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-cog mr-1"></i> Select Preset
+                        </label>
+                        <div class="relative">
+                            <select id="presetSelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
+                                <option value="">Loading all presets...</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <i class="fas fa-chevron-down text-gray-400"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Details Container -->
-                <div id="detailsContainer">
-                    <div class="text-center py-12 text-gray-400">
-                        <i class="fas fa-info-circle text-4xl mb-4"></i>
-                        <p class="text-lg font-medium">No preset selected</p>
-                        <p class="text-sm mt-1">Select a preset from the dropdown to view details</p>
+                    
+                    <!-- Details Container -->
+                    <div id="detailsContainer">
+                        <div class="text-center py-12 text-gray-400">
+                            <i class="fas fa-info-circle text-4xl mb-4"></i>
+                            <p class="text-lg font-medium">Select a preset to view details</p>
+                            <p class="text-sm mt-1">All DIDs (Active and Paused) are available</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -371,9 +352,11 @@
             'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
         ];
         
-        // Current search results
+        // Variables
         let currentResults = [];
         let drawerOpen = false;
+        let allPresets = [];
+        let presetListLoaded = false;
         
         // Initialize
         function init() {
@@ -508,13 +491,6 @@
                     }
                     
                     currentResults = data.results;
-                    populatePresetSelect();
-                    
-                    // Auto-select first preset and load details if drawer is open
-                    if (drawerOpen && currentResults.length > 0) {
-                        presetSelect.value = currentResults[0];
-                        await handlePresetSelect({ target: presetSelect });
-                    }
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -528,7 +504,6 @@
                     showMessage(data.message, 'error');
                     resultContent.innerHTML = `<span class="text-gray-400">No results</span>`;
                     currentResults = [];
-                    populatePresetSelect();
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -543,7 +518,6 @@
                 showMessage('Network error. Please check your connection.', 'error');
                 resultContent.innerHTML = `<span class="text-gray-400">Connection error</span>`;
                 currentResults = [];
-                populatePresetSelect();
             } finally {
                 searchBtn.innerHTML = `<i class="fas fa-search mr-2"></i> Search`;
                 searchBtn.disabled = false;
@@ -564,16 +538,6 @@
             stateContainer.classList.add('hidden');
             phoneContainer.classList.add('hidden');
             updateValueLabel();
-            
-            // Clear drawer
-            presetSelect.innerHTML = '<option value="">Select a preset from results</option>';
-            detailsContainer.innerHTML = `
-                <div class="text-center py-12 text-gray-400">
-                    <i class="fas fa-info-circle text-4xl mb-4"></i>
-                    <p class="text-lg font-medium">No preset selected</p>
-                    <p class="text-sm mt-1">Select a preset from the dropdown to view details</p>
-                </div>
-            `;
         }
         
         function handleCopy() {
@@ -611,17 +575,69 @@
             });
         }
         
+        // Load all presets for management view
+        async function loadAllPresets() {
+            if (presetListLoaded && allPresets.length > 0) return;
+            
+            try {
+                // Try to load from a special endpoint (if exists)
+                const response = await fetch(`${SCRIPT_URL}?action=listPresets`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.presets && data.presets.length > 0) {
+                        allPresets = data.presets;
+                        populatePresetSelect();
+                        presetListLoaded = true;
+                        return;
+                    }
+                }
+                
+                // Fallback: Show message and allow manual entry
+                presetSelect.innerHTML = `
+                    <option value="">No preset list available</option>
+                    <option value="D2 CPL">D2 CPL</option>
+                    <option value="D3 CPL">D3 CPL</option>
+                    <option value="D4 REV">D4 REV</option>
+                    <option value="D5 RTB">D5 RTB</option>
+                    <option value="D16 CPL">D16 CPL</option>
+                    <option value="D25 CPL">D25 CPL</option>
+                `;
+                presetSelect.disabled = false;
+                
+            } catch (error) {
+                // Final fallback with sample data
+                presetSelect.innerHTML = `
+                    <option value="">Error loading presets</option>
+                    <option value="D2 CPL">D2 CPL</option>
+                    <option value="D3 CPL">D3 CPL</option>
+                    <option value="D4 REV">D4 REV</option>
+                    <option value="D5 RTB">D5 RTB</option>
+                    <option value="D16 CPL">D16 CPL</option>
+                `;
+                presetSelect.disabled = false;
+            }
+        }
+        
         function populatePresetSelect() {
-            presetSelect.innerHTML = '<option value="">Select a preset from results</option>';
-            currentResults.forEach(preset => {
+            presetSelect.innerHTML = '<option value="">Select a preset...</option>';
+            
+            allPresets.forEach(preset => {
                 const option = document.createElement('option');
                 option.value = preset;
                 option.textContent = preset;
                 presetSelect.appendChild(option);
             });
             
-            // Enable/disable based on results
-            presetSelect.disabled = currentResults.length === 0;
+            presetSelect.disabled = false;
+            
+            // Auto-select first preset if drawer is open
+            if (drawerOpen && allPresets.length > 0) {
+                setTimeout(() => {
+                    presetSelect.value = allPresets[0];
+                    handlePresetSelect({ target: presetSelect });
+                }, 100);
+            }
         }
         
         async function handlePresetSelect(e) {
@@ -630,19 +646,41 @@
                 detailsContainer.innerHTML = `
                     <div class="text-center py-12 text-gray-400">
                         <i class="fas fa-info-circle text-4xl mb-4"></i>
-                        <p class="text-lg font-medium">No preset selected</p>
-                        <p class="text-sm mt-1">Select a preset from the dropdown to view details</p>
+                        <p class="text-lg font-medium">Select a preset to view details</p>
+                        <p class="text-sm mt-1">All DIDs (Active and Paused) are available</p>
                     </div>
                 `;
                 return;
             }
             
             try {
-                // Show loading
+                // Show loading skeleton
                 detailsContainer.innerHTML = `
-                    <div class="text-center py-12">
-                        <div class="loading h-8 w-8 rounded-full bg-blue-500 mx-auto mb-4"></div>
-                        <p class="text-gray-600 font-medium">Loading details...</p>
+                    <div class="space-y-6">
+                        <div class="flex items-start justify-between">
+                            <div class="space-y-2">
+                                <div class="skeleton h-7 w-32 rounded"></div>
+                                <div class="skeleton h-5 w-24 rounded"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="skeleton h-6 w-20 rounded-full"></div>
+                                <div class="skeleton h-6 w-24 rounded-full"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            ${Array(12).fill().map(() => `
+                                <div>
+                                    <div class="skeleton h-4 w-16 mb-2 rounded"></div>
+                                    <div class="skeleton h-5 w-full rounded"></div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div>
+                            <div class="skeleton h-4 w-20 mb-2 rounded"></div>
+                            <div class="skeleton h-24 w-full rounded-lg"></div>
+                        </div>
                     </div>
                 `;
                 
@@ -696,7 +734,6 @@
             const statusBadgeClass = detail.status === 'Active' ? 'badge-green' : 'badge-red';
             const transferBadgeClass = detail.transferType === 'Warm' ? 'badge-blue' : 
                                       detail.transferType === 'Blind' ? 'badge-purple' : 'badge-gray';
-            const phoneBadgeClass = detail.phoneRule === 'Registered' ? 'badge-green' : 'badge-blue';
             
             const html = `
                 <div class="space-y-6 fade-in">
@@ -708,7 +745,7 @@
                         </div>
                         <div class="flex flex-col items-end gap-2">
                             <span class="${statusBadgeClass} badge">${detail.status || 'N/A'}</span>
-                            <span class="${transferBadgeClass} badge">${detail.transferType || 'N/A'} Transfer</span>
+                            <span class="${transferBadgeClass} badge">${detail.transferType || 'N/A'}</span>
                         </div>
                     </div>
                     
@@ -737,10 +774,6 @@
                             <p class="font-medium">${formattedDate}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500 mb-1">Phone Rule</p>
-                            <span class="${phoneBadgeClass} badge">${detail.phoneRule || 'N/A'}</span>
-                        </div>
-                        <div>
                             <p class="text-sm text-gray-500 mb-1">Webform</p>
                             <p class="font-medium">${detail.webform || 'None'}</p>
                         </div>
@@ -749,7 +782,7 @@
                             <p class="font-medium">${detail.buffer || 'N/A'}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-500 mb-1">Age Limit</p>
+                            <p class="text-sm text-gray-500 mb-1">Age</p>
                             <p class="font-medium">${detail.age || 'N/A'}</p>
                         </div>
                         <div>
@@ -759,12 +792,6 @@
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Break Timings</p>
                             <p class="font-medium">${detail.breakTimings || 'N/A'}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-500 mb-1">Area Code Filter</p>
-                            <p class="font-medium text-sm font-mono bg-gray-100 p-2 rounded truncate" title="${detail.areaCodeFilter || 'N/A'}">
-                                ${detail.areaCodeFilter ? detail.areaCodeFilter.substring(0, 40) + (detail.areaCodeFilter.length > 40 ? '...' : '') : 'N/A'}
-                            </p>
                         </div>
                     </div>
                     
@@ -802,25 +829,24 @@
             detailsContainer.innerHTML = html;
         }
         
-        function toggleDrawer() {
-            drawerOpen = !drawerOpen;
-            
+        async function toggleDrawer() {
             if (drawerOpen) {
-                drawer.classList.remove('hidden');
-                mainContent.classList.add('md:pr-[480px]');
-                detailedViewBtn.innerHTML = `<i class="fas fa-times mr-2"></i> Close Details`;
-                detailedViewBtn.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-300');
-                
-                // Auto-select first preset if we have results
-                if (currentResults.length > 0 && presetSelect.value === '') {
-                    presetSelect.value = currentResults[0];
-                    handlePresetSelect({ target: presetSelect });
-                }
-            } else {
-                drawer.classList.add('hidden');
-                mainContent.classList.remove('md:pr-[480px]');
+                // Close drawer
+                drawer.style.width = '0';
+                mainContent.classList.remove('pr-0', 'md:pr-[480px]');
                 detailedViewBtn.innerHTML = `<i class="fas fa-list-ul mr-2"></i> Detailed View`;
                 detailedViewBtn.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-300');
+                drawerOpen = false;
+            } else {
+                // Open drawer
+                drawer.style.width = '480px';
+                mainContent.classList.add('pr-0', 'md:pr-[480px]');
+                detailedViewBtn.innerHTML = `<i class="fas fa-times mr-2"></i> Close Details`;
+                detailedViewBtn.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-300');
+                drawerOpen = true;
+                
+                // Load all presets for management view
+                await loadAllPresets();
             }
         }
         
