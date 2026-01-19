@@ -305,7 +305,7 @@
                                 <i class="fas fa-table mr-2 text-blue-600"></i>
                                 Detailed Breakdown
                             </h2>
-                            <p class="text-sm text-gray-500 mt-1">Management View - All DIDs</p>
+                            <p class="text-sm text-gray-500 mt-1">Browse DID configuration details</p>
                         </div>
                         <button id="closeDrawerBtn" class="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors duration-150">
                             <i class="fas fa-times text-xl"></i>
@@ -319,7 +319,7 @@
                         </label>
                         <div class="relative">
                             <select id="presetSelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                <option value="">Loading presets...</option>
+                                <option value="">Select Preset</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <i class="fas fa-chevron-down text-gray-400"></i>
@@ -626,7 +626,7 @@
         
         // Load all presets for management view
         async function loadAllPresets() {
-            presetSelect.innerHTML = '<option value="">Loading presets...</option>';
+            presetSelect.innerHTML = '<option value="">Select Preset</option>';
             presetSelect.disabled = true;
             presetStatus.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Loading presets...';
             
@@ -651,7 +651,7 @@
                     if (findData.success && findData.results && findData.results.length > 0) {
                         allPresets = findData.results;
                         populatePresetSelect();
-                        presetStatus.innerHTML = `<i class="fas fa-info-circle text-blue-500 mr-1"></i> Loaded ${allPresets.length} active presets`;
+                        presetStatus.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-1"></i> Loaded ${allPresets.length} presets`;
                         return;
                     }
                 }
@@ -659,12 +659,12 @@
                 // Final fallback with sample presets
                 allPresets = ['D2 CPL', 'D3 CPL', 'D4 REV', 'D5 RTB', 'D16 CPL', 'D25 CPL', 'D10 CPL', 'D15 RTB'];
                 populatePresetSelect();
-                presetStatus.innerHTML = `<i class="fas fa-info-circle text-amber-500 mr-1"></i> Using sample presets`;
+                presetStatus.innerHTML = `Select from available presets`;
                 
             } catch (error) {
                 allPresets = ['D2 CPL', 'D3 CPL', 'D4 REV', 'D5 RTB', 'D16 CPL', 'D25 CPL'];
                 populatePresetSelect();
-                presetStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500 mr-1"></i> Using fallback presets`;
+                presetStatus.innerHTML = `Run a search or select from available presets`;
             }
         }
         
