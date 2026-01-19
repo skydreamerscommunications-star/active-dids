@@ -322,7 +322,7 @@
                         </div>
                         <div class="relative">
                             <select id="presetSelect" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                <option value="">No presets available</option>
+                                <option value="">Loading presets...</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <i class="fas fa-chevron-down text-gray-400"></i>
@@ -335,7 +335,7 @@
                         <div class="text-center py-12 text-gray-400">
                             <i class="fas fa-info-circle text-4xl mb-4"></i>
                             <p class="text-lg font-medium">Select a preset to view details</p>
-                            <p class="text-sm mt-1">Perform a search to load presets</p>
+                            <p class="text-sm mt-1">All presets available anytime</p>
                         </div>
                     </div>
                 </div>
@@ -386,9 +386,10 @@
         let isSearching = false;
         let currentSelectedPreset = '';
         let hasAutoSelectedFirst = false;
+        let allPresets = []; // Store all presets from backend
         
         // Initialize
-        function init() {
+        async function init() {
             // Populate state dropdown
             states.forEach(state => {
                 const option = document.createElement('option');
@@ -421,7 +422,34 @@
             
             // Initial UI state
             updateValueLabel();
-            updatePresetDropdown(); // Initialize empty dropdown
+            
+            // Load all presets on page load
+            await loadAllPresets();
+        }
+        
+        // Load all presets from backend
+        async function loadAllPresets() {
+            try {
+                const params = new URLSearchParams({
+                    action: 'listpresets'
+                });
+                
+                const response = await fetch(`${SCRIPT_URL}?${params}`);
+                const data = await response.json();
+                
+                if (data.success && data.presets && Array.isArray(data.presets)) {
+                    allPresets = data.presets;
+                    updatePresetDropdownWithPresets(allPresets, 'all');
+                } else {
+                    // Fallback to empty
+                    allPresets = [];
+                    updatePresetDropdownWithPresets([], 'all');
+                }
+            } catch (error) {
+                console.error('Failed to load presets:', error);
+                allPresets = [];
+                updatePresetDropdownWithPresets([], 'all');
+            }
         }
         
         function handleInputTypeChange() {
@@ -530,8 +558,8 @@
                     // Update current results
                     currentResults = data.results;
                     
-                    // Update preset dropdown with new results
-                    updatePresetDropdown();
+                    // Update preset dropdown with search results (not all presets)
+                    updatePresetDropdownWithPresets(data.results, 'search');
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -546,7 +574,7 @@
                     resultContent.innerHTML = `<span class="text-gray-400">No results</span>`;
                     resultMeta.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500"></i> No Active DID matched this input`;
                     currentResults = [];
-                    updatePresetDropdown();
+                    updatePresetDropdownWithPresets(allPresets, 'all');
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -562,7 +590,7 @@
                 resultContent.innerHTML = `<span class="text-gray-400">Connection error</span>`;
                 resultMeta.innerHTML = `<i class="fas fa-exclamation-circle text-red-500"></i> Network error`;
                 currentResults = [];
-                updatePresetDropdown();
+                updatePresetDropdownWithPresets(allPresets, 'all');
             } finally {
                 searchBtn.innerHTML = `<i class="fas fa-search mr-2"></i> Search`;
                 searchBtn.disabled = false;
@@ -583,8 +611,8 @@
             fallbackContainer.innerHTML = '';
             clearMessages();
             
-            // Reset preset dropdown
-            updatePresetDropdown();
+            // Reset preset dropdown to show all presets
+            updatePresetDropdownWithPresets(allPresets, 'all');
             
             // Reset drawer if open
             if (drawerOpen) {
@@ -592,7 +620,7 @@
                     <div class="text-center py-12 text-gray-400">
                         <i class="fas fa-info-circle text-4xl mb-4"></i>
                         <p class="text-lg font-medium">Select a preset to view details</p>
-                        <p class="text-sm mt-1">Perform a search to load presets</p>
+                        <p class="text-sm mt-1">All presets available anytime</p>
                     </div>
                 `;
             }
@@ -638,40 +666,45 @@
             });
         }
         
-        // Update preset dropdown with current results
-        function updatePresetDropdown() {
-            if (currentResults.length === 0) {
+        // Update preset dropdown with given presets array
+        function updatePresetDropdownWithPresets(presetsArray, source = 'all') {
+            if (!presetsArray || presetsArray.length === 0) {
                 presetSelect.innerHTML = '<option value="">No presets available</option>';
                 presetSelect.disabled = true;
-                presetCount.innerHTML = '';
-            } else {
-                presetSelect.disabled = false;
-                presetCount.innerHTML = `${currentResults.length} presets`;
+                presetCount.innerHTML = source === 'search' ? '0 search results' : '0 presets';
+                return;
+            }
+            
+            presetSelect.disabled = false;
+            presetCount.innerHTML = source === 'search' 
+                ? `${presetsArray.length} search results` 
+                : `${presetsArray.length} total presets`;
+            
+            // Save current selection before rebuilding
+            const currentValue = presetSelect.value;
+            
+            // Rebuild options
+            presetSelect.innerHTML = '<option value="">Select Preset</option>';
+            
+            presetsArray.forEach(preset => {
+                const option = document.createElement('option');
+                option.value = preset;
+                option.textContent = preset;
+                presetSelect.appendChild(option);
+            });
+            
+            // Restore previous selection if it exists in new list
+            if (currentValue && presetsArray.includes(currentValue)) {
+                presetSelect.value = currentValue;
+            } else if (source === 'search' && presetsArray.length > 0 && !hasAutoSelectedFirst) {
+                // Auto-select first preset only for search results, once
+                presetSelect.value = presetsArray[0];
+                hasAutoSelectedFirst = true;
                 
-                // Save current selection before rebuilding
-                const currentValue = presetSelect.value;
-                
-                // Rebuild options
-                presetSelect.innerHTML = '<option value="">Select Preset</option>';
-                
-                currentResults.forEach(preset => {
-                    const option = document.createElement('option');
-                    option.value = preset;
-                    option.textContent = preset;
-                    presetSelect.appendChild(option);
-                });
-                
-                // Restore previous selection if it exists in new results
-                if (currentValue && currentResults.includes(currentValue)) {
-                    presetSelect.value = currentValue;
-                } else if (!hasAutoSelectedFirst && drawerOpen) {
-                    // Auto-select first preset only once when drawer is open
-                    presetSelect.value = currentResults[0];
-                    hasAutoSelectedFirst = true;
-                    
-                    // Load details for the first preset
+                // Auto-load details only if drawer is open
+                if (drawerOpen) {
                     setTimeout(() => {
-                        loadPresetDetails(currentResults[0]);
+                        loadPresetDetails(presetsArray[0]);
                     }, 100);
                 }
             }
@@ -684,7 +717,7 @@
                     <div class="text-center py-12 text-gray-400">
                         <i class="fas fa-info-circle text-4xl mb-4"></i>
                         <p class="text-lg font-medium">Select a preset to view details</p>
-                        <p class="text-sm mt-1">All DIDs (Active and Paused) are available</p>
+                        <p class="text-sm mt-1">All presets available anytime</p>
                     </div>
                 `;
                 return;
@@ -743,7 +776,7 @@
                         <div class="text-center py-12 text-amber-400">
                             <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
                             <p class="text-lg font-medium">Could not load details</p>
-                            <p class="text-sm mt-1">Preset may not exist or backend error</p>
+                            <p class="text-sm mt-1">${data.message || 'Preset may not exist'}</p>
                         </div>
                     `;
                 }
@@ -897,15 +930,7 @@
                 leftWrap.classList.remove('max-w-5xl', 'mx-auto');
                 leftWrap.classList.add('max-w-none', 'mx-0');
                 drawerOpen = true;
-                
-                // If we have results and no preset is selected yet, auto-select first one
-                if (currentResults.length > 0 && !presetSelect.value && !hasAutoSelectedFirst) {
-                    hasAutoSelectedFirst = true;
-                    presetSelect.value = currentResults[0];
-                    setTimeout(() => {
-                        loadPresetDetails(currentResults[0]);
-                    }, 100);
-                }
+        
             }
         }
         
