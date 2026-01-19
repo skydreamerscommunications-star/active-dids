@@ -130,7 +130,7 @@
             100% { background-position: -200% 0; }
         }
         
-        /* Drawer backdrop overlay */
+        /* Drawer backdrop overlay - UPDATED: visual only, non-blocking */
         .drawer-backdrop {
             position: fixed;
             top: 0;
@@ -139,14 +139,14 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.3);
             opacity: 0;
-            pointer-events: none;
+            pointer-events: none; /* Changed from 'auto' to 'none' to not block interactions */
             transition: opacity 0.3s ease-out;
             z-index: 40;
         }
         
         .drawer-backdrop.active {
             opacity: 1;
-            pointer-events: auto;
+            pointer-events: none; /* Changed from 'auto' to 'none' to not block interactions */
         }
     </style>
 </head>
@@ -560,6 +560,7 @@
                     
                     // Update preset dropdown with search results (not all presets)
                     updatePresetDropdownWithPresets(data.results, 'search');
+                
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -699,14 +700,11 @@
             } else if (source === 'search' && presetsArray.length > 0 && !hasAutoSelectedFirst) {
                 // Auto-select first preset only for search results, once
                 presetSelect.value = presetsArray[0];
+                currentSelectedPreset = presetsArray[0];
                 hasAutoSelectedFirst = true;
                 
-                // Auto-load details only if drawer is open
-                if (drawerOpen) {
-                    setTimeout(() => {
-                        loadPresetDetails(presetsArray[0]);
-                    }, 100);
-                }
+                // Auto-load details regardless of drawer state
+                loadPresetDetails(presetsArray[0]);
             }
         }
         
@@ -731,35 +729,37 @@
             if (!preset) return;
             
             try {
-                // Show loading skeleton
-                detailsContainer.innerHTML = `
-                    <div class="space-y-6">
-                        <div class="flex items-start justify-between">
-                            <div class="space-y-2">
-                                <div class="skeleton h-7 w-32 rounded"></div>
-                                <div class="skeleton h-5 w-24 rounded"></div>
-                            </div>
-                            <div class="space-y-2">
-                                <div class="skeleton h-6 w-20 rounded-full"></div>
-                                <div class="skeleton h-6 w-24 rounded-full"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            ${Array(12).fill().map(() => `
-                                <div>
-                                    <div class="skeleton h-4 w-16 mb-2 rounded"></div>
-                                    <div class="skeleton h-5 w-full rounded"></div>
+                // Show loading skeleton in drawer if drawer is open
+                if (drawerOpen) {
+                    detailsContainer.innerHTML = `
+                        <div class="space-y-6">
+                            <div class="flex items-start justify-between">
+                                <div class="space-y-2">
+                                    <div class="skeleton h-7 w-32 rounded"></div>
+                                    <div class="skeleton h-5 w-24 rounded"></div>
                                 </div>
-                            `).join('')}
+                                <div class="space-y-2">
+                                    <div class="skeleton h-6 w-20 rounded-full"></div>
+                                    <div class="skeleton h-6 w-24 rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                ${Array(12).fill().map(() => `
+                                    <div>
+                                        <div class="skeleton h-4 w-16 mb-2 rounded"></div>
+                                        <div class="skeleton h-5 w-full rounded"></div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div>
+                                <div class="skeleton h-4 w-20 mb-2 rounded"></div>
+                                <div class="skeleton h-24 w-full rounded-lg"></div>
+                            </div>
                         </div>
-                        
-                        <div>
-                            <div class="skeleton h-4 w-20 mb-2 rounded"></div>
-                            <div class="skeleton h-24 w-full rounded-lg"></div>
-                        </div>
-                    </div>
-                `;
+                    `;
+                }
                 
                 const params = new URLSearchParams({
                     action: 'details',
@@ -770,24 +770,30 @@
                 const data = await response.json();
                 
                 if (data.success && data.detail) {
-                    renderDetails(data.detail);
+                    if (drawerOpen) {
+                        renderDetails(data.detail);
+                    }
                 } else {
+                    if (drawerOpen) {
+                        detailsContainer.innerHTML = `
+                            <div class="text-center py-12 text-amber-400">
+                                <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                                <p class="text-lg font-medium">Could not load details</p>
+                                <p class="text-sm mt-1">${data.message || 'Preset may not exist'}</p>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                if (drawerOpen) {
                     detailsContainer.innerHTML = `
-                        <div class="text-center py-12 text-amber-400">
+                        <div class="text-center py-12 text-red-400">
                             <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                            <p class="text-lg font-medium">Could not load details</p>
-                            <p class="text-sm mt-1">${data.message || 'Preset may not exist'}</p>
+                            <p class="text-lg font-medium">Network error</p>
+                            <p class="text-sm mt-1">Failed to load details</p>
                         </div>
                     `;
                 }
-            } catch (error) {
-                detailsContainer.innerHTML = `
-                    <div class="text-center py-12 text-red-400">
-                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                        <p class="text-lg font-medium">Network error</p>
-                        <p class="text-sm mt-1">Failed to load details</p>
-                    </div>
-                `;
             }
         }
         
@@ -930,7 +936,11 @@
                 leftWrap.classList.remove('max-w-5xl', 'mx-auto');
                 leftWrap.classList.add('max-w-none', 'mx-0');
                 drawerOpen = true;
-        
+                
+                // If we have a selected preset, load its details when drawer opens
+                if (currentSelectedPreset) {
+                    loadPresetDetails(currentSelectedPreset);
+                }
             }
         }
         
