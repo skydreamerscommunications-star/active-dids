@@ -180,16 +180,16 @@
                 <div class="flex flex-col md:flex-row gap-4 items-end">
                     <div class="flex-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-filter mr-1"></i> Input Type
+                            <i class="fas fa-map-marker-alt mr-1"></i> State
                         </label>
-                        <div class="relative">
-                            <select id="inputType" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                <option value="">Select Input Type</option>
-                                <option value="state">State</option>
-                                <option value="phone">Phone</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-400"></i>
+                        <div id="stateContainer">
+                            <div class="relative">
+                                <select id="stateSelect" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
+                                    <option value="">Select State</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <i class="fas fa-chevron-down text-gray-400"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -206,30 +206,6 @@
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <i class="fas fa-chevron-down text-gray-400"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1">
-                        <label id="valueLabel" class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-map-marker-alt mr-1"></i> State
-                        </label>
-                        <div id="stateContainer" class="hidden">
-                            <div class="relative">
-                                <select id="stateSelect" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                    <option value="">Select State</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <i class="fas fa-chevron-down text-gray-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="phoneContainer" class="hidden">
-                            <div class="relative">
-                                <input type="text" id="phoneInput" placeholder="e.g. 9123592014" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-gray-800 font-medium">
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <i class="fas fa-phone text-gray-400"></i>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -346,13 +322,8 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby44WE1uqg5cHqyVCUAd2KYO-C17nP_w8IpT_RFiNGCHasLVrHHwTbMpYwmEQDy6dbH/exec";
         
         // DOM Elements
-        const inputType = document.getElementById('inputType');
         const leadPhoneType = document.getElementById('leadPhoneType');
-        const stateContainer = document.getElementById('stateContainer');
-        const phoneContainer = document.getElementById('phoneContainer');
         const stateSelect = document.getElementById('stateSelect');
-        const phoneInput = document.getElementById('phoneInput');
-        const valueLabel = document.getElementById('valueLabel');
         const searchBtn = document.getElementById('searchBtn');
         const clearBtn = document.getElementById('clearBtn');
         const resultContent = document.getElementById('resultContent');
@@ -397,9 +368,6 @@
             });
             
             // Event listeners
-            inputType.addEventListener('change', handleInputTypeChange);
-            phoneInput.addEventListener('input', formatPhoneInput);
-            phoneInput.addEventListener('blur', validatePhoneInput);
             searchBtn.addEventListener('click', handleSearch);
             clearBtn.addEventListener('click', handleClear);
             copyBtn.addEventListener('click', handleCopy);
@@ -408,18 +376,10 @@
             closeDrawerBtn.addEventListener('click', toggleDrawer);
             presetSelect.addEventListener('change', handlePresetSelect);
             
-            // Enter key support
-            phoneInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !isSearching) handleSearch();
-            });
-            
             // Close drawer on escape
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && drawerOpen) toggleDrawer();
             });
-            
-            // Initial UI state
-            updateValueLabel();
             
             // Load all presets on page load
             await loadAllPresets();
@@ -450,70 +410,15 @@
             }
         }
         
-        function handleInputTypeChange() {
-            const type = inputType.value;
-            updateValueLabel();
-            
-            // Show/hide containers
-            stateContainer.classList.add('hidden');
-            phoneContainer.classList.add('hidden');
-            
-            if (type === 'state') {
-                stateContainer.classList.remove('hidden');
-                stateSelect.focus();
-            } else if (type === 'phone') {
-                phoneContainer.classList.remove('hidden');
-                phoneInput.focus();
-            }
-        }
-        
-        function updateValueLabel() {
-            const type = inputType.value;
-            const icon = type === 'state' ? 'map-marker-alt' : 'phone';
-            const text = type === 'state' ? 'State' : 'Phone Number';
-            
-            valueLabel.innerHTML = `<i class="fas fa-${icon} mr-1"></i> ${text}`;
-        }
-        
-        function formatPhoneInput(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            
-            // Format as XXX-XXX-XXXX
-            if (value.length > 3 && value.length <= 6) {
-                value = value.slice(0, 3) + '-' + value.slice(3);
-            } else if (value.length > 6) {
-                value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6, 10);
-            }
-            
-            e.target.value = value;
-        }
-        
-        function validatePhoneInput() {
-            const value = phoneInput.value.replace(/\D/g, '');
-            if (value && value.length !== 10) {
-                showMessage('Invalid phone number. Enter exactly 10 digits.', 'error');
-                return false;
-            }
-            return true;
-        }
-        
         async function handleSearch() {
             if (isSearching) return;
             
-            const type = inputType.value;
+            const type = "state";
             const phoneType = leadPhoneType.value;
-            let value = '';
-            
-            // Get value based on type
-            if (type === 'state') {
-                value = stateSelect.value;
-            } else if (type === 'phone') {
-                value = phoneInput.value.replace(/\D/g, '');
-                if (!validatePhoneInput()) return;
-            }
+            const value = stateSelect.value;
             
             // Validation
-            if (!type || !phoneType || !value) {
+            if (!phoneType || !value) {
                 showMessage('Please fill all fields.', 'error');
                 return;
             }
@@ -598,10 +503,8 @@
         }
         
         function handleClear() {
-            inputType.value = '';
             leadPhoneType.value = '';
             stateSelect.value = '';
-            phoneInput.value = '';
             resultContent.innerHTML = '<span class="text-gray-400">Results will appear here...</span>';
             resultMeta.innerHTML = '';
             currentResults = [];
@@ -623,11 +526,6 @@
                     </div>
                 `;
             }
-            
-            // Reset UI
-            stateContainer.classList.add('hidden');
-            phoneContainer.classList.add('hidden');
-            updateValueLabel();
         }
         
         function handleCopy() {
