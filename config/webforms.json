@@ -1,0 +1,15 @@
+{
+  "Medicare": {
+    "D1 CPL": "",
+    "D13 CPA": "https://smartpost365.com/"
+  },
+  "Auto": {
+    "A2 REV": "",
+    "A3 REV": "",
+    "A4 CPL": "",
+    "A5 REV": ""
+  },
+  "MVA": {
+    "M1 CPL": "https://webform.skydreammers.com/apis/SHN/1api/"
+  }
+}
