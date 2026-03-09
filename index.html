@@ -130,7 +130,7 @@
             100% { background-position: -200% 0; }
         }
         
-        /* Drawer backdrop overlay - UPDATED: visual only, non-blocking */
+        /* Drawer backdrop overlay */
         .drawer-backdrop {
             position: fixed;
             top: 0;
@@ -139,14 +139,232 @@
             bottom: 0;
             background: rgba(0, 0, 0, 0.08);
             opacity: 0;
-            pointer-events: none; /* Changed from 'auto' to 'none' to not block interactions */
+            pointer-events: none;
             transition: opacity 0.3s ease-out;
             z-index: 40;
         }
         
         .drawer-backdrop.active {
             opacity: 1;
-            pointer-events: none; /* Changed from 'auto' to 'none' to not block interactions */
+            pointer-events: none;
+        }
+        
+        /* V2 Style Scorecards */
+        .scorecard-v2 {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f6;
+            transition: transform 0.1s ease;
+        }
+        
+        .scorecard-v2:active {
+            transform: scale(0.98);
+        }
+        
+        .scorecard-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .scorecard-value {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        /* Action buttons inside scorecard */
+        .action-stack-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            background: #f8fafd;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .action-btn:hover {
+            background: #f1f5f9;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.96);
+        }
+        
+        .action-btn.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+        
+        /* Overlay styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .overlay-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.2s ease;
+        }
+        
+        .overlay.active .overlay-content {
+            transform: translateY(0);
+        }
+        
+        .overlay-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            z-index: 10;
+        }
+        
+        .overlay-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .close-overlay {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #64748b;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.1s ease;
+        }
+        
+        .close-overlay:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        
+        .overlay-body {
+            padding: 24px;
+        }
+        
+        /* Campaign section in overlays */
+        .campaign-section {
+            margin-bottom: 28px;
+        }
+        
+        .campaign-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #eef2f6;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .overlay-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .overlay-btn-green {
+            background: #10b981;
+            color: white;
+        }
+        
+        .overlay-btn-green:hover {
+            background: #059669;
+        }
+        
+        .overlay-btn-gray {
+            background: #e2e8f0;
+            color: #475569;
+            cursor: default;
+            opacity: 0.8;
+        }
+        
+        .overlay-btn:active:not(.overlay-btn-gray) {
+            transform: scale(0.96);
+        }
+        
+        /* Priority monitor update */
+        .priority-item {
+            background: #f1f5f9;
+            color: #1e293b;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .priority-arrow {
+            color: #94a3b8;
+            margin: 0 6px;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -154,12 +372,41 @@
     <!-- Drawer Backdrop -->
     <div id="drawerBackdrop" class="drawer-backdrop" onclick="toggleDrawer()"></div>
     
+    <!-- Overlays -->
+    <div id="jornayaOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h2><i class="fas fa-chart-line text-blue-500"></i> Jornaya Links</h2>
+                <button class="close-overlay" onclick="closeOverlays()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="overlay-body" id="jornayaOverlayBody">
+                <div class="text-center py-8 text-gray-400">
+                    <i class="fas fa-spinner fa-spin mr-2"></i> Loading Jornaya links...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="webformsOverlay" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h2><i class="fas fa-wpforms text-green-500"></i> Webform Links</h2>
+                <button class="close-overlay" onclick="closeOverlays()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="overlay-body" id="webformsOverlayBody">
+                <div class="text-center py-8 text-gray-400">
+                    <i class="fas fa-spinner fa-spin mr-2"></i> Loading webforms...
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Main Container -->
     <div class="min-h-screen">
         <!-- Left Content Panel -->
         <div id="leftWrap" class="transition-all duration-300 ease-out max-w-5xl mx-auto px-4 py-6">
-            <!-- Header -->
-            <div class="flex items-center justify-between mb-8">
+            <!-- Header (EXISTING - UNCHANGED) -->
+            <div class="flex items-center justify-between mb-6">
                 <div class="text-sm text-gray-500 font-medium">
                     <i class="fas fa-sort-amount-down mr-1"></i> Priority Sorted
                 </div>
@@ -175,56 +422,104 @@
                 </button>
             </div>
             
-            <!-- Control Row -->
-            <div class="bg-white rounded-xl p-6 mb-6 card-shadow border border-gray-100">
-                <div class="flex flex-col md:flex-row justify-center items-end gap-6">
-                    <div class="w-full md:w-64">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-map-marker-alt mr-1"></i> State
-                        </label>
-                        <div id="stateContainer">
-                            <div class="relative">
-                                <select id="stateSelect" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                    <option value="">Select State</option>
-                                </select>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <i class="fas fa-chevron-down text-gray-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="w-full md:w-64">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            <i class="fas fa-user-check mr-1"></i> Phone Status
-                        </label>
-                        <div class="relative">
-                            <select id="leadPhoneType" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800 font-medium">
-                                <option value="">Select Status</option>
-                                <option value="clean">Clean</option>
-                                <option value="registered">Registered</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                <i class="fas fa-chevron-down text-gray-400"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          <!-- REFINED: Scorecard Row - Professional with Icons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <!-- Active Card - Green -->
+    <div class="bg-white rounded-xl p-5 shadow-lg border-l-4 border-emerald-500 hover:shadow-xl transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-600">Active</span>
+            <i class="fas fa-circle text-emerald-500 text-xs"></i>
+        </div>
+        <div class="text-2xl font-bold text-gray-800" id="activeCount">0</div>
+    </div>
+    
+    <!-- Paused Card - Red -->
+    <div class="bg-white rounded-xl p-5 shadow-lg border-l-4 border-rose-500 hover:shadow-xl transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-600">Paused</span>
+            <i class="fas fa-pause-circle text-rose-500 text-sm"></i>
+        </div>
+        <div class="text-2xl font-bold text-gray-800" id="pausedCount">0</div>
+    </div>
+    
+    <!-- Priority Card - Amber -->
+    <div class="bg-white rounded-xl p-5 shadow-lg border-l-4 border-amber-500 hover:shadow-xl transition-shadow">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-600">Priority</span>
+            <i class="fas fa-arrow-up text-amber-500 text-sm"></i>
+        </div>
+        <div class="text-xl font-bold text-gray-800 truncate" id="topPriority">—</div>
+    </div>
+    
+    <!-- Action Stack Card - Blue -->
+    <div class="bg-white rounded-xl p-5 shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-sm font-medium text-gray-600">Action Stack</span>
+            <i class="fas fa-layer-group text-blue-500 text-sm"></i>
+        </div>
+        <div class="flex gap-2">
+            <button id="jornayaStackBtn" class="flex-1 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg py-2 px-2 text-sm font-medium text-gray-700 flex items-center justify-center gap-1.5 shadow-sm">
+                <i class="fas fa-chart-simple text-blue-500 text-xs"></i>
+                <span>Jornaya</span>
+            </button>
+            <button id="webformsStackBtn" class="flex-1 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg py-2 px-2 text-sm font-medium text-gray-700 flex items-center justify-center gap-1.5 shadow-sm">
+                <i class="fas fa-file-lines text-green-500 text-xs"></i>
+                <span>Webforms</span>
+            </button>
+        </div>
+    </div>
+</div>
             
-            <!-- Search Row -->
-            <div class="flex justify-center gap-4 mb-8">
-                <button id="searchBtn" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="fas fa-search"></i>
-                    Search
-                </button>
-                <button id="clearBtn" class="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-95">
-                    <i class="fas fa-eraser"></i>
-                    Clear
-                </button>
+          <!-- Control Row - Buttons Inside Container -->
+<div class="bg-white rounded-xl p-6 mb-6 card-shadow border border-gray-100">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <!-- State dropdown -->
+        <div>
+            <label class="block text-sm font-medium text-gray-600 mb-2">
+                <i id="stateIcon" class="fas fa-map-marker-alt mr-1 text-gray-400"></i> State
+            </label>
+            <div class="relative">
+                <select id="stateSelect" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800">
+                    <option value="">Select State</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
             </div>
+        </div>
+        
+        <!-- Phone Status dropdown -->
+        <div>
+            <label class="block text-sm font-medium text-gray-600 mb-2">
+                <i id="phoneIcon" class="fas fa-phone-alt mr-1 text-gray-400"></i> Phone Status
+            </label>
+            <div class="relative">
+                <select id="leadPhoneType" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white text-gray-800">
+                    <option value="">Select Status</option>
+                    <option value="clean">Clean</option>
+                    <option value="registered">Registered</option>
+                </select>
+                <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+            </div>
+        </div>
+        
+        <!-- Search button -->
+        <div>
+            <button id="searchBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
+                <i class="fas fa-search"></i>
+                Search
+            </button>
+        </div>
+        
+        <!-- Clear button -->
+        <div>
+            <button id="clearBtn" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2.5 rounded-lg font-semibold shadow-sm hover:shadow transition-all duration-200 active:scale-95 flex items-center justify-center gap-2">
+                <i class="fas fa-eraser"></i>
+                Clear
+            </button>
+        </div>
+    </div>
+</div>
             
-            <!-- Result Row -->
+            <!-- Result Row (EXISTING - UNCHANGED - Result not in container) -->
             <div class="bg-white rounded-xl p-6 mb-4 card-shadow border border-gray-100">
                 <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
                     <div class="text-gray-700 font-semibold whitespace-nowrap flex items-center">
@@ -248,10 +543,24 @@
                 <div id="fallbackContainer" class="mt-4 text-center"></div>
             </div>
             
-            <!-- Messages -->
+            <!-- Messages (EXISTING) -->
             <div id="messageContainer" class="mb-6"></div>
             
-            <!-- Realtime Updates -->
+            <!-- Priority Monitor (UPDATED to show dynamic data) -->
+            <div class="bg-white rounded-xl p-6 mb-6 card-shadow border border-gray-100">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <i class="fas fa-sort-amount-down text-blue-500 mr-2"></i>
+                        Active DIDs Priority Sorted
+                    </h3>
+                    <span id="priorityCount" class="text-xs font-medium bg-gray-100 text-gray-600 px-3 py-1 rounded-full">0 active</span>
+                </div>
+                <div id="priorityMonitor" class="flex flex-wrap items-center min-h-[40px]">
+                    <span class="text-gray-400 italic">Loading priorities...</span>
+                </div>
+            </div>
+            
+            <!-- Realtime Updates (EXISTING - UNCHANGED) -->
             <div class="bg-white rounded-xl p-6 card-shadow border border-gray-100">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -268,7 +577,7 @@
             </div>
         </div>
         
-        <!-- Drawer -->
+        <!-- Drawer (EXISTING - UNCHANGED) -->
         <div id="drawer" class="fixed top-0 right-0 h-screen w-[480px] transform translate-x-full opacity-0 pointer-events-none transition-all duration-300 ease-out z-50">
             <div class="h-full bg-white shadow-xl border-l border-gray-200 overflow-y-auto">
                 <div class="p-6">
@@ -320,11 +629,14 @@
     <script>
         // CONFIGURATION
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby44WE1uqg5cHqyVCUAd2KYO-C17nP_w8IpT_RFiNGCHasLVrHHwTbMpYwmEQDy6dbH/exec";
+        const CONFIG_BASE = "./config";
         
         // DOM Elements
         const leadPhoneType = document.getElementById('leadPhoneType');
         const stateSelect = document.getElementById('stateSelect');
         const searchBtn = document.getElementById('searchBtn');
+        const stateIcon = document.getElementById('stateIcon');
+        const phoneIcon = document.getElementById('phoneIcon');
         const clearBtn = document.getElementById('clearBtn');
         const resultContent = document.getElementById('resultContent');
         const copyBtn = document.getElementById('copyBtn');
@@ -340,7 +652,20 @@
         const detailsContainer = document.getElementById('detailsContainer');
         const resultMeta = document.getElementById('resultMeta');
         
-        // State list (US states)
+        // NEW: Scorecard and overlay elements
+        const activeCountEl = document.getElementById('activeCount');
+        const pausedCountEl = document.getElementById('pausedCount');
+        const topPriorityEl = document.getElementById('topPriority');
+        const priorityMonitor = document.getElementById('priorityMonitor');
+        const priorityCount = document.getElementById('priorityCount');
+        const jornayaStackBtn = document.getElementById('jornayaStackBtn');
+        const webformsStackBtn = document.getElementById('webformsStackBtn');
+        const jornayaOverlay = document.getElementById('jornayaOverlay');
+        const webformsOverlay = document.getElementById('webformsOverlay');
+        const jornayaOverlayBody = document.getElementById('jornayaOverlayBody');
+        const webformsOverlayBody = document.getElementById('webformsOverlayBody');
+        
+        // State
         const states = [
             'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
             'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
@@ -349,15 +674,165 @@
             'SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
         ];
         
-        // Variables
         let currentResults = [];
         let drawerOpen = false;
         let isSearching = false;
         let currentSelectedPreset = '';
         let hasAutoSelectedFirst = false;
-        let allPresets = []; // Store all presets from backend
+        let allPresets = [];
+        let jornayaConfig = null;
+        let webformsConfig = null;
+        let refreshInterval = null;
         
-        // Initialize
+        // =============================================
+        // NEW FUNCTIONS FOR SCORECARDS AND OVERLAYS
+        // =============================================
+        
+        // Fetch summary data
+        async function fetchSummary() {
+            try {
+                const params = new URLSearchParams({ action: 'summary' });
+                const response = await fetch(`${SCRIPT_URL}?${params}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update scorecards
+                    activeCountEl.textContent = data.active || 0;
+                    pausedCountEl.textContent = data.paused || 0;
+                    topPriorityEl.textContent = data.topPriority || '—';
+                    priorityCount.textContent = `${data.active || 0} active`;
+                    
+                    // Update priority monitor
+                    if (data.prioritySorted && data.prioritySorted.length > 0) {
+                        let html = '';
+                        data.prioritySorted.forEach((preset, index) => {
+                            if (index > 0) {
+                                html += '<span class="priority-arrow"><i class="fas fa-chevron-right"></i></span>';
+                            }
+                            html += `<span class="priority-item">${preset}</span>`;
+                        });
+                        priorityMonitor.innerHTML = html;
+                    } else {
+                        priorityMonitor.innerHTML = '<span class="text-gray-400 italic">No active DIDs</span>';
+                    }
+                }
+            } catch (error) {
+                console.error('Summary error:', error);
+            }
+        }
+        
+        // Load Jornaya config
+        async function loadJornayaConfig() {
+            try {
+                const response = await fetch(`${CONFIG_BASE}/jornaya.json?t=${Date.now()}`);
+                jornayaConfig = await response.json();
+            } catch (error) {
+                console.error('Failed to load jornaya config:', error);
+            }
+        }
+        
+        // Load Webforms config
+        async function loadWebformsConfig() {
+            try {
+                const response = await fetch(`${CONFIG_BASE}/webforms.json?t=${Date.now()}`);
+                webformsConfig = await response.json();
+            } catch (error) {
+                console.error('Failed to load webforms config:', error);
+            }
+        }
+        
+        // Render Jornaya overlay
+        function renderJornayaOverlay() {
+            if (!jornayaConfig) {
+                jornayaOverlayBody.innerHTML = '<div class="text-center py-8 text-red-400">Failed to load config</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            Object.entries(jornayaConfig).forEach(([campaign, buttons]) => {
+                html += `<div class="campaign-section">`;
+                html += `<div class="campaign-title">${campaign}</div>`;
+                html += `<div class="button-grid">`;
+                
+                Object.entries(buttons).forEach(([label, url]) => {
+                    html += `<button class="overlay-btn overlay-btn-green" data-url="${url}">${label}</button>`;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            jornayaOverlayBody.innerHTML = html || '<div class="text-center py-6 text-gray-400">No Jornaya links</div>';
+            
+            // Add click handlers
+            jornayaOverlayBody.querySelectorAll('button[data-url]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const url = e.target.dataset.url;
+                    if (url) window.open(url, '_blank');
+                });
+            });
+        }
+        
+        // Render Webforms overlay
+        function renderWebformsOverlay() {
+            if (!webformsConfig) {
+                webformsOverlayBody.innerHTML = '<div class="text-center py-8 text-red-400">Failed to load config</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            Object.entries(webformsConfig).forEach(([campaign, buttons]) => {
+                html += `<div class="campaign-section">`;
+                html += `<div class="campaign-title">${campaign}</div>`;
+                html += `<div class="button-grid">`;
+                
+                Object.entries(buttons).forEach(([label, url]) => {
+                    const hasUrl = url && url.trim() !== '';
+                    const btnClass = hasUrl ? 'overlay-btn-green' : 'overlay-btn-gray';
+                    html += `<button class="overlay-btn ${btnClass}" ${hasUrl ? `data-url="${url}"` : ''}>${label}</button>`;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            webformsOverlayBody.innerHTML = html || '<div class="text-center py-6 text-gray-400">No webforms</div>';
+            
+            // Add click handlers - only for buttons with URLs
+            webformsOverlayBody.querySelectorAll('button[data-url]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const url = e.target.dataset.url;
+                    if (url) window.open(url, '_blank');
+                });
+            });
+        }
+        
+        // Open overlays
+        function openJornayaOverlay() {
+            jornayaOverlay.classList.add('active');
+            webformsOverlay.classList.remove('active');
+            jornayaStackBtn.classList.add('active');
+            webformsStackBtn.classList.remove('active');
+            renderJornayaOverlay();
+        }
+        
+        function openWebformsOverlay() {
+            webformsOverlay.classList.add('active');
+            jornayaOverlay.classList.remove('active');
+            webformsStackBtn.classList.add('active');
+            jornayaStackBtn.classList.remove('active');
+            renderWebformsOverlay();
+        }
+        
+        function closeOverlays() {
+            jornayaOverlay.classList.remove('active');
+            webformsOverlay.classList.remove('active');
+        }
+        
+        // =============================================
+        // EXISTING FUNCTIONS (PRESERVED)
+        // =============================================
+        
         async function init() {
             // Populate state dropdown
             states.forEach(state => {
@@ -375,14 +850,57 @@
             detailedViewBtn.addEventListener('click', toggleDrawer);
             closeDrawerBtn.addEventListener('click', toggleDrawer);
             presetSelect.addEventListener('change', handlePresetSelect);
+
+            // Icon color change when dropdown selected
+            stateSelect.addEventListener('change', function () {
+            if (this.value) {
+        stateIcon.classList.remove('text-gray-400');
+        stateIcon.classList.add('text-blue-600');
+    } else {
+        stateIcon.classList.remove('text-blue-600');
+        stateIcon.classList.add('text-gray-400');
+    }
+});
+
+         leadPhoneType.addEventListener('change', function () {
+         if (this.value) {
+        phoneIcon.classList.remove('text-gray-400');
+        phoneIcon.classList.add('text-blue-600');
+       } else {
+        phoneIcon.classList.remove('text-blue-600');
+        phoneIcon.classList.add('text-gray-400');
+    }
+      });
             
-            // Close drawer on escape
+            // NEW: Overlay event listeners
+            jornayaStackBtn.addEventListener('click', openJornayaOverlay);
+            webformsStackBtn.addEventListener('click', openWebformsOverlay);
+            
+            // Close overlays on escape
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && drawerOpen) toggleDrawer();
+                if (e.key === 'Escape') {
+                    closeOverlays();
+                    if (drawerOpen) toggleDrawer();
+                }
             });
             
-            // Load all presets on page load
+            // Close overlays when clicking outside
+            jornayaOverlay.addEventListener('click', (e) => {
+                if (e.target === jornayaOverlay) closeOverlays();
+            });
+            
+            webformsOverlay.addEventListener('click', (e) => {
+                if (e.target === webformsOverlay) closeOverlays();
+            });
+            
+            // Load all data
             await loadAllPresets();
+            await fetchSummary();
+            await loadJornayaConfig();
+            await loadWebformsConfig();
+            
+            // Auto-refresh summary every 30 seconds
+            refreshInterval = setInterval(fetchSummary, 30000);
         }
         
         // Load all presets from backend
@@ -399,7 +917,6 @@
                     allPresets = data.presets;
                     updatePresetDropdownWithPresets(allPresets, 'all');
                 } else {
-                    // Fallback to empty
                     allPresets = [];
                     updatePresetDropdownWithPresets([], 'all');
                 }
@@ -417,19 +934,16 @@
             const phoneType = leadPhoneType.value;
             const value = stateSelect.value;
             
-            // Validation
             if (!phoneType || !value) {
                 showMessage('Please fill all fields.', 'error');
                 return;
             }
             
-            // Clear previous
             clearMessages();
             fallbackContainer.innerHTML = '';
             resultMeta.innerHTML = '';
-            hasAutoSelectedFirst = false; // Reset auto-select flag
+            hasAutoSelectedFirst = false;
             
-            // Show loading state
             resultContent.innerHTML = `<div class="flex items-center text-gray-500"><div class="loading h-4 w-4 rounded-full bg-blue-500 mr-3"></div>Searching...</div>`;
             searchBtn.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> Searching`;
             searchBtn.disabled = true;
@@ -458,12 +972,8 @@
                         resultMeta.innerHTML = `<i class="fas fa-exclamation-triangle text-amber-500"></i> No Active DID matched this input`;
                     }
                     
-                    // Update current results
                     currentResults = data.results;
-                    
-                    // Update preset dropdown with search results (not all presets)
                     updatePresetDropdownWithPresets(data.results, 'search');
-                
                     
                     if (data.fallbackUrl) {
                         fallbackContainer.innerHTML = `
@@ -503,30 +1013,40 @@
         }
         
         function handleClear() {
-            leadPhoneType.value = '';
-            stateSelect.value = '';
-            resultContent.innerHTML = '<span class="text-gray-400">Results will appear here...</span>';
-            resultMeta.innerHTML = '';
-            currentResults = [];
-            currentSelectedPreset = '';
-            hasAutoSelectedFirst = false;
-            fallbackContainer.innerHTML = '';
-            clearMessages();
-            
-            // Reset preset dropdown to show all presets
-            updatePresetDropdownWithPresets(allPresets, 'all');
-            
-            // Reset drawer if open
-            if (drawerOpen) {
-                detailsContainer.innerHTML = `
-                    <div class="text-center py-12 text-gray-400">
-                        <i class="fas fa-info-circle text-4xl mb-4"></i>
-                        <p class="text-lg font-medium">Select a preset to view details</p>
-                        <p class="text-sm mt-1">All presets available anytime</p>
-                    </div>
-                `;
-            }
-        }
+    leadPhoneType.value = '';
+    stateSelect.value = '';
+    resultContent.innerHTML = '<span class="text-gray-400">Results will appear here...</span>';
+    resultMeta.innerHTML = '';
+    currentResults = [];
+    currentSelectedPreset = '';
+    hasAutoSelectedFirst = false;
+    fallbackContainer.innerHTML = '';
+    clearMessages();
+    
+    // Reset icons to gray
+    if (stateIcon) {
+        stateIcon.classList.remove('text-blue-600');
+        stateIcon.classList.add('text-gray-400');
+    }
+    if (phoneIcon) {
+        phoneIcon.classList.remove('text-blue-600');
+        phoneIcon.classList.add('text-gray-400');
+    }
+    
+    // Reset preset dropdown to show all presets
+    updatePresetDropdownWithPresets(allPresets, 'all');
+    
+    // Reset drawer if open
+    if (drawerOpen) {
+        detailsContainer.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+                <i class="fas fa-info-circle text-4xl mb-4"></i>
+                <p class="text-lg font-medium">Select a preset to view details</p>
+                <p class="text-sm mt-1">All presets available anytime</p>
+            </div>
+        `;
+    }
+}
         
         function handleCopy() {
             copyTextToClipboard();
@@ -544,16 +1064,13 @@
             if (!text || text.includes('Results will appear here') || text.includes('Searching')) return;
             
             navigator.clipboard.writeText(text).then(() => {
-                // Visual feedback on copy button
                 const originalHTML = copyBtn.innerHTML;
                 copyBtn.innerHTML = `<i class="fas fa-check mr-2"></i> Copied ✅`;
                 copyBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
                 copyBtn.classList.add('bg-green-700');
                 
-                // Visual feedback on result box
                 resultContent.classList.add('bg-green-50', 'border-green-200');
                 
-                // Revert after 1.2 seconds
                 setTimeout(() => {
                     copyBtn.innerHTML = originalHTML;
                     copyBtn.classList.remove('bg-green-700');
@@ -563,7 +1080,6 @@
             });
         }
         
-        // Update preset dropdown with given presets array
         function updatePresetDropdownWithPresets(presetsArray, source = 'all') {
             if (!presetsArray || presetsArray.length === 0) {
                 presetSelect.innerHTML = '<option value="">No presets available</option>';
@@ -577,10 +1093,8 @@
                 ? `${presetsArray.length} search results` 
                 : `${presetsArray.length} Presets Loaded`;
             
-            // Save current selection before rebuilding
             const currentValue = presetSelect.value;
             
-            // Rebuild options
             presetSelect.innerHTML = '<option value="">Select Preset</option>';
             
             presetsArray.forEach(preset => {
@@ -590,16 +1104,12 @@
                 presetSelect.appendChild(option);
             });
             
-            // Restore previous selection if it exists in new list
             if (currentValue && presetsArray.includes(currentValue)) {
                 presetSelect.value = currentValue;
             } else if (source === 'search' && presetsArray.length > 0 && !hasAutoSelectedFirst) {
-                // Auto-select first preset only for search results, once
                 presetSelect.value = presetsArray[0];
                 currentSelectedPreset = presetsArray[0];
                 hasAutoSelectedFirst = true;
-                
-                // Auto-load details regardless of drawer state
                 loadPresetDetails(presetsArray[0]);
             }
         }
@@ -625,7 +1135,6 @@
             if (!preset) return;
             
             try {
-                // Show loading skeleton in drawer if drawer is open
                 if (drawerOpen) {
                     detailsContainer.innerHTML = `
                         <div class="space-y-6">
@@ -694,7 +1203,6 @@
         }
         
         function renderDetails(detail) {
-            // Format date
             let formattedDate = 'N/A';
             try {
                 const date = new Date(detail.date);
@@ -709,7 +1217,6 @@
                 formattedDate = detail.date || 'N/A';
             }
             
-            // Determine badge colors
             const campaignBadgeClass = detail.campaign === 'Medicare' ? 'badge-yellow' : 'badge-gray';
             const statusBadgeClass = detail.status === 'Active' ? 'badge-green' : 'badge-red';
             const transferBadgeClass = detail.transferType === 'Warm' ? 'badge-blue' : 
@@ -717,7 +1224,6 @@
             
             const html = `
                 <div class="space-y-6 fade-in">
-                    <!-- Header with Preset and Status -->
                     <div class="flex items-start justify-between">
                         <div>
                             <h3 class="text-xl font-bold text-gray-900">${detail.preset}</h3>
@@ -729,7 +1235,6 @@
                         </div>
                     </div>
                     
-                    <!-- Campaign & Priority -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Campaign</p>
@@ -747,7 +1252,6 @@
                         </div>
                     </div>
                     
-                    <!-- Details Grid -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <p class="text-sm text-gray-500 mb-1">Date</p>
@@ -775,7 +1279,6 @@
                         </div>
                     </div>
                     
-                    <!-- Notes -->
                     ${detail.notes ? `
                     <div>
                         <p class="text-sm text-gray-500 mb-2 flex items-center">
@@ -787,7 +1290,6 @@
                     </div>
                     ` : ''}
                     
-                    <!-- Geo (Last) -->
                     <div>
                         <p class="text-sm text-gray-500 mb-2 flex items-center justify-between">
                             <span><i class="fas fa-globe-americas mr-2"></i> Geo States</span>
@@ -811,29 +1313,24 @@
         
         async function toggleDrawer() {
             if (drawerOpen) {
-                // Close drawer
                 drawer.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
                 drawer.classList.add('translate-x-full', 'opacity-0', 'pointer-events-none');
                 drawerBackdrop.classList.remove('active');
                 detailedViewBtn.innerHTML = `<i class="fas fa-list-ul mr-2"></i> Detailed View`;
                 detailedViewBtn.classList.remove('bg-blue-100', 'text-blue-700', 'border-blue-300');
-                // Restore centering
                 leftWrap.classList.remove('max-w-none', 'mx-0');
                 leftWrap.classList.add('max-w-5xl', 'mx-auto');
                 drawerOpen = false;
             } else {
-                // Open drawer
                 drawer.classList.remove('translate-x-full', 'opacity-0', 'pointer-events-none');
                 drawer.classList.add('translate-x-0', 'opacity-100', 'pointer-events-auto');
                 drawerBackdrop.classList.add('active');
                 detailedViewBtn.innerHTML = `<i class="fas fa-times mr-2"></i> Close Details`;
                 detailedViewBtn.classList.add('bg-blue-100', 'text-blue-700', 'border-blue-300');
-                // Remove centering to align with drawer
                 leftWrap.classList.remove('max-w-5xl', 'mx-auto');
                 leftWrap.classList.add('max-w-none', 'mx-0');
                 drawerOpen = true;
                 
-                // If we have a selected preset, load its details when drawer opens
                 if (currentSelectedPreset) {
                     loadPresetDetails(currentSelectedPreset);
                 }
@@ -856,7 +1353,6 @@
                 </div>
             `;
             
-            // Auto-remove success messages after 5 seconds
             if (type === 'success') {
                 setTimeout(() => {
                     if (messageContainer.firstChild) {
@@ -870,7 +1366,11 @@
             messageContainer.innerHTML = '';
         }
         
-        // Initialize app
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (refreshInterval) clearInterval(refreshInterval);
+        });
+        
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
