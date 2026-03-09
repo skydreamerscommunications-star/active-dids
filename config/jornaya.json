@@ -1,16 +1,14 @@
 {
-  "campaigns": [
-    {
-      "name": "Medicare",
-      "url": "http://46.62.210.128:4060/"
-    },
-    {
-      "name": "Auto",
-      "url": "http://49.13.112.8:4040/"
-    },
-    {
-      "name": "MVA",
-      "url": "http://49.13.112.8:4000/"
-    }
-  ]
+  "Medicare": {
+    "MedicareBenefitsCare": "http://46.62.210.128:4060/"
+  },
+  "Auto": {
+    "Auto Jornaya": "http://49.13.112.8:4040/",
+    "Auto Policy": "http://49.13.112.8:4040/",
+    "Auto Policy Alternative": "http://46.62.210.128:4040/"
+  },
+  "MVA": {
+    "Accident Auto Solution": "http://49.13.112.8:4000/",
+    "Auto Accident Zone": "http://49.13.112.8:4010/"
+  }
 }
