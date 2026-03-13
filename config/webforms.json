@@ -14,6 +14,7 @@
     "A9 RTB : ""
   },
   "MVA": {
-    "M1 RTB": "https://mvaapply.com/mva_api_3.html"
+    "M1 RTB": "https://mvaapply.com/mva_api_3.html",
+    "M2 CPL": "https://webform.skydreammers.com/apis/2026/CMZ/MV1/"
   }
 }
