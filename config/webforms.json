@@ -1,9 +1,5 @@
-{
-  "Medicare": {
-    "D1 CPL": "",
-    "D13 CPA": "https://smartpost365.com/"
-  },
-  "Auto": {
+{  
+    "Auto": {
     "A2 REV": "",
     "A3 REV": "",
     "A4 CPL": "",
@@ -17,7 +13,9 @@
     "A12 RTB": "https://webform.skydreammers.com/apis/2026/pdg/At1/"
   },
   "MVA": {
-    "M1 RTB": "https://mvaapply.com/mva_api_3.html",
-    "M2 CPL": "https://webform.skydreammers.com/apis/2026/CMZ/MV1/"
+    "M1 CPQ": "https://webform.skydreammers.com/apis/2026/WTK/MV1/",
+    "M2 CPL": "",
+    "M3 RTB": "https://mvaapply.com/mva_api_10.html",
+    "M4 CPL": "https://casesettlementnow.com/mva-lawsuits/?link_tag=raza"
   }
 }
