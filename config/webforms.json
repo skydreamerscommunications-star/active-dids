@@ -1,6 +1,6 @@
 {  
     "Auto": {
-    "A2 REV": "",
+    "A2 REV": "",      
     "A3 REV": "",
     "A4 CPL": "",
     "A5 REV": "",
@@ -17,6 +17,7 @@
     "M2 CPL": "",
     "M3 RTB": "https://mvaapply.com/mva_api_10.html",
     "M4 CPL": "https://casesettlementnow.com/mva-lawsuits/?link_tag=raza",
-    "M5 CPL": "https://webform.skydreammers.com/apis/2026/ndv/MV1/"
+    "M5 CPL": "https://webform.skydreammers.com/apis/2026/ndv/MV1/",
+    "M6 CPQ": "https://webform.skydreammers.com/apis/2026/ndv/MV2/"  
   }
 }
