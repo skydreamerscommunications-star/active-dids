@@ -10,7 +10,8 @@
     "A9 RTB": "",
     "A10 REV": "",
     "A11 RTB": "https://webform.skydreammers.com/apis/2026/ndv/AT1/",
-    "A12 RTB": "https://webform.skydreammers.com/apis/2026/pdg/At1/"
+    "A12 RTB": "https://webform.skydreammers.com/apis/2026/pdg/At1/",
+    "A13 CPL": "https://webform.skydreammers.com/apis/2026/PPCP/AT1/"
   },
   "MVA": {
     "M1 CPQ": "https://webform.skydreammers.com/apis/2026/WTK/MV1/",
